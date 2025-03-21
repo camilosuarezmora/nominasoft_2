@@ -30,4 +30,5 @@ $BODY$
     END;
 $BODY$
 
+/*LANGUAGE indica el lenguaje en el que está escrito el cuerpo de la función porque en el motor POSTGREs se pueden escribir funciones en varios lenguajes*/
 LANGUAGE PLPGSQL;
