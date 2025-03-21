@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS tab_pmtros
     val_auxtrans    DECIMAL (7,0)   NOT NULL, -- Vr. Aux. Transporte vigente para el año según gobierno
     val_pagotrans   DECIMAL(1)      NOT NULL DEFAULT 2, --PARA SABER SI PAGAMOS AUXILIO DE TRANSPORTE O NO 
     val_ano_nom     DECIMAL(4,0)    NOT NULL DEFAULT 2025, --AÑO VIGENTE
-    val_mes_nom     DECIMAL(2)      NOT NULL DEFAULT, --MES VIGENTE
+    val_mes_nom     DECIMAL(2)      NOT NULL, --MES VIGENTE
     val_por_intces  DECIMAL(2,0)    NOT NULL DEFAULT 12, -- Vr. porcentaje de intereses a la cesantía
     num_diasmes     DECIMAL(2,0)    NOT NULL DEFAULT 30, -- Número de días del mes fiscal
     PRIMARY KEY(id_empresa)
