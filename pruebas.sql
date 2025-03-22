@@ -43,8 +43,12 @@ func insert:
 */
 
 /*
-funct delete
+funct delete:
 	SELECT fun_delete_meses(1)
 */
 
+/*
+func update:
+	SELECT fun_update_meses(4,'el mes del más lindo');
+*/
 SELECT * FROM tab_meses;
