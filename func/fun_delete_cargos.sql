@@ -22,7 +22,7 @@ $BODY$
         END IF;
 		*/
 
-		RETURN 'borrado exitoso'
+		RETURN 'borrado exitoso';
     END;
 $BODY$
 

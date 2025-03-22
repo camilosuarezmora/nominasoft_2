@@ -6,10 +6,8 @@ consola para probar todos los querys y esa vuelta
 
 --para probar el fun_insert_cargos()
 /*
-SELECT fun_insert_cargos('cargo de super mega jefe pro');
-
+SELECT fun_insert_cargos('cargo de noob');
 */	
-select * from tab_cargos;
 
 /*
 Probar la lógica del update:
@@ -21,4 +19,11 @@ UPDATE tab_cargos SET
 /*
 Probar el update de cargos:
 SELECT fun_update_cargos (1,'cargo actualizado');
+*/
+
+
+select * from tab_cargos;
+
+/*Probar fun_delete_cargo
+SELECT fun_delete_cargos(1);
 */
