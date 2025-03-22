@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS tab_conceptos
     ind_pereo_pago  CHAR(1)         NOT NULL DEFAULT 'Q', -- Q QUINCENA /M MENSUAL
     neto_pagado     BOOLEAN         NOT NULL DEFAULT FALSE, --TRUE NETO PAGADO/ FALSE NO NETO PAGADO
     val_porcent     DECIMAL(2,0)    NOT NULL, -- Por si el concepto se aplica con un porcentaje. Si es 0 no aplica.
-    val_fijo        DECIMAL(8,0)    NOT NULL, -- Por si el conbcepto debe llegar un valor fijo permanente. Puede cam,biarlo el usuario
+    val_fijo        DECIMAL(8,0)    NOT NULL, -- Por si el conbcepto debe llegar un valor fijo permanente. Puede cambiarlo el usuario
     ind_legal       BOOLEAN         NOT NULL, --TRUE OBLIGATORIO / FALSE NO OBLIGATORIO
     PRIMARY KEY (id_concepto)
 );
