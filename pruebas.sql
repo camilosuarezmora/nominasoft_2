@@ -51,4 +51,16 @@ funct delete:
 func update:
 	SELECT fun_update_meses(4,'el mes del más lindo');
 */
-SELECT * FROM tab_meses;
+--SELECT * FROM tab_meses;
+
+
+
+
+--TABLA CONCEPTOS
+/*
+Prueba insert: 
+SELECT fun_insert_conceptos('concepto3',FALSE,'Q',TRUE,0,1067625,TRUE);
+*/
+	
+SELECT * FROM tab_conceptos;
+
