@@ -9,19 +9,19 @@ consola para probar todos los querys y esa vuelta
 
 /*
 para probar el fun_insert_cargos()
-SELECT fun_insert_cargos('cargo de noob');
+	SELECT fun_insert_cargos('cargo de noob');
 */	
 
 /*
 Probar la lógica del update:
-UPDATE tab_cargos SET 
-    nom_cargo = 'cargo developer'
-    WHERE id_cargo = 1
+	UPDATE tab_cargos SET 
+   		nom_cargo = 'cargo developer'
+   		WHERE id_cargo = 1
 */
 
 /*
 Probar el update de cargos:
-SELECT fun_update_cargos (1,'cargo actualizado');
+	SELECT fun_update_cargos (1,'cargo actualizado');
 */
 
 
@@ -33,10 +33,18 @@ SELECT fun_delete_cargos(1);
 
 
 
+
+
 --TABLA MESES
-SELECT * FROM tab_meses;
 
 /*
 func insert:
-SELECT fun_insert_meses('agosto');
+	SELECT fun_insert_meses('mayo');
 */
+
+/*
+funct delete
+	SELECT fun_delete_meses(1)
+*/
+
+SELECT * FROM tab_meses;
