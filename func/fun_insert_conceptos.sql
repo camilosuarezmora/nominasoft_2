@@ -30,8 +30,7 @@ $$
 			ind_legal
 		) 
 		VALUES(
-            (SELECT COALESCE(MAX(id_concepto),0) + 1
-            FROM tab_conceptos),
+            (SELECT COALESCE(MAX(id_concepto),0) + 1 FROM tab_conceptos),
             wnom_concepto,
             wind_operacion,
             wind_pereo_pago,
