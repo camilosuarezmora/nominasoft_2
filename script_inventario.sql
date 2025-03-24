@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS tab_pmtros
     val_mes_nom     DECIMAL(2)      NOT NULL, --MES VIGENTE
     val_por_intces  DECIMAL(2,0)    NOT NULL DEFAULT 12, -- Vr. porcentaje de intereses a la cesantía
     num_diasmes     DECIMAL(2,0)    NOT NULL DEFAULT 30, -- Número de días del mes fiscal
-    PRIMARY KEY(id_empresa)
+    PRIMARY KEY(id_empresa) 
 );
 
 CREATE TABLE IF NOT EXISTS tab_cargos
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS tab_emplea
     val_sal_basico  DECIMAL(8)      NOT NULL,
     fec_ingreso     DATE            NOT NULL,
     PRIMARY KEY(id_emplea),
-    FOREIGN KEY(id_cargo)   REFERENCES tab_cargos(id_cargo)
+    FOREIGN KEY(id_cargo)   REFERENCES tab_cargos(id_cargo) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS tab_conceptos
@@ -91,8 +91,8 @@ CREATE TABLE IF NOT EXISTS tab_nomina
     val_dias_trab   DECIMAL(2)      NOT NULL CHECK(val_dias_trab >= 1 AND val_dias_trab <= 30),
     val_nomina      DECIMAL(8)      NOT NULL CHECK (val_nomina >= 0),
     PRIMARY KEY(ano_nom,mes_nom,per_nom),
-    FOREIGN KEY(id_emplea)      REFERENCES tab_emplea(id_emplea),
-    FOREIGN KEY(id_concepto)    REFERENCES tab_conceptos(id_concepto)
+    FOREIGN KEY(id_emplea)      REFERENCES tab_emplea(id_emplea) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(id_concepto)    REFERENCES tab_conceptos(id_concepto) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS tab_novedades
@@ -105,6 +105,6 @@ CREATE TABLE IF NOT EXISTS tab_novedades
     val_dias_trab   DECIMAL(2)      NOT NULL CHECK(val_dias_trab >= 1 AND val_dias_trab <= 30),
     val_nomina      DECIMAL(8)      NOT NULL CHECK (val_nomina >= 0),
     PRIMARY KEY(ano_nom,mes_nom,per_nom),
-    FOREIGN KEY(id_emplea)      REFERENCES tab_emplea(id_emplea),
-    FOREIGN KEY(id_concepto)    REFERENCES tab_conceptos(id_concepto)
+    FOREIGN KEY(id_emplea)      REFERENCES tab_emplea(id_emplea) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(id_concepto)    REFERENCES tab_conceptos(id_concepto) ON DELETE CASCADE ON UPDATE CASCADE
 );
