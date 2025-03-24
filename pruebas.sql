@@ -71,5 +71,16 @@ SELECT fun_update_conceptos(2, 'nombre cambiado del concepto 2',FALSE,'Q',TRUE,0
 Prueba delete:
 SELECT fun_delete_conceptos(4);
 */
-SELECT * FROM tab_conceptos;
 
+--SELECT * FROM tab_conceptos;
+
+
+
+
+--TABLA PMTROS
+/*
+insert:
+select fun_insert_pmtros('Financiera Coomultrasan','Q',1420000,200000,2,2025,1,12,30);
+*/
+
+select * from tab_pmtros;
