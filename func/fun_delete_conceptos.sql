@@ -6,7 +6,7 @@
 =======================================================
 */
 
-CREATE OR REPLACE FUNCTION fun_delete_conceptos(wid_concepto tab_conceptos.id_concepto%TYPE) RETURNS VOID AS:
+CREATE OR REPLACE FUNCTION fun_delete_conceptos(wid_concepto tab_conceptos.id_concepto%TYPE) RETURNS VOID AS
 $$
     BEGIN
         DELETE FROM tab_conceptos
