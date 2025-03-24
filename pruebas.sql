@@ -61,10 +61,15 @@ func update:
 Prueba insert: 
 SELECT fun_insert_conceptos('concepto3',FALSE,'Q',TRUE,0,1067625,TRUE);
 */
+
 /*
 Prueba update:
 SELECT fun_update_conceptos(2, 'nombre cambiado del concepto 2',FALSE,'Q',TRUE,0,1067625,TRUE);
 */
 
+/*
+Prueba delete:
+SELECT fun_delete_conceptos(4);
+*/
 SELECT * FROM tab_conceptos;
 
