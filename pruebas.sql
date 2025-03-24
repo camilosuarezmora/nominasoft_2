@@ -88,4 +88,14 @@ UPDATE:
 select fun_update_pmtros(2,'FC actualizada','Q',1420000,200000,2,2025,1,12,30);
 */
 
-select * from tab_pmtros;
+/*
+DELETE
+select fun_delete_pmtros(2);
+*/
+--select * from tab_pmtros;
+
+
+
+
+--tab_novedades
+/**/
