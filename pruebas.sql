@@ -83,4 +83,9 @@ insert:
 select fun_insert_pmtros('Financiera Coomultrasan','Q',1420000,200000,2,2025,1,12,30);
 */
 
+/*
+UPDATE:
+select fun_update_pmtros(2,'FC actualizada','Q',1420000,200000,2,2025,1,12,30);
+*/
+
 select * from tab_pmtros;
