@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS tab_cargos
     PRIMARY KEY(id_cargo)
 );
 
+/*inserciones de la tabla cargos*/
 select fun_insert_cargos('Gerente General');
 select fun_insert_cargos('Gerente de Ventas');
 select fun_insert_cargos('Gerente de TI');
