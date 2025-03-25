@@ -13,8 +13,8 @@ wind_perio_pago tab_pmtros.ind_perio_pago%TYPE,
 wval_smlv tab_pmtros.val_smlv%TYPE,
 wval_auxtrans tab_pmtros.val_auxtrans%TYPE,
 wind_numtrans tab_pmtros.ind_numtrans%TYPE,
-wval_ano_nom tab_pmtros.val_ano_nom%TYPE,
-wval_mes_nom tab_pmtros.val_mes_nom%TYPE,
+wano_nom tab_pmtros.ano_nom%TYPE,
+wmes_nom tab_pmtros.mes_nom%TYPE,
 wval_por_intces tab_pmtros.val_por_intces%TYPE,
 wnum_diasmes tab_pmtros.num_diasmes%TYPE
 ) RETURNS VOID AS
@@ -26,8 +26,8 @@ $$
         val_smlv = wval_smlv,
         val_auxtrans = wval_auxtrans,
         ind_numtrans = wind_numtrans,
-        val_ano_nom = wval_ano_nom,
-        val_mes_nom = wval_mes_nom,
+        ano_nom = wano_nom,
+        mes_nom = wmes_nom,
         val_por_intces = wval_por_intces,
         num_diasmes = wnum_diasmes
         WHERE wid_empresa = id_empresa;
