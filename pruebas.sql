@@ -131,7 +131,15 @@ SELECT fun_update_novedades(2024,3,1,1,1,20,4500000)
 
 /*
 DELETE:
-
+SELECT fun_delete_novedades(2024,3,1);
 */
+--select * from tab_novedades;
 
-select * from tab_novedades;
+
+
+
+
+--tab_nomina
+/*
+INSERT:
+*/
