@@ -102,11 +102,16 @@ select fun_delete_pmtros(2);
 --tab_emplea
 /*
 insert:
-SELECT fun_insert_emplea('rosa','torcoroma',false,'cra 30 # 14-08',3188477656,3,0,0,'O-',17,1,2000000,'2007-03-25');
+SELECT fun_insert_emplea('jhon','doe',false,'alabama av 58',123456789,3,0,0,'U-',58,1,42000000,'2007-03-25');
 */
 
-/*delete
+/*update
+SELECT fun_update_emplea(1,'camilo serio','suarez m',TRUE,'cra 30 # 14-08',3188477656,3,0,0,'O+',17,1,700000,'2025-03-25');
 
+/*
+DELETE
+
+*/
 */
 
 select * from tab_emplea;
