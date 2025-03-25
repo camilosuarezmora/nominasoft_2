@@ -98,7 +98,6 @@ select fun_delete_pmtros(2);
 
 
 
-
 --tab_emplea
 /*
 insert:
@@ -110,18 +109,23 @@ SELECT fun_update_emplea(1,'camilo serio','suarez m',TRUE,'cra 30 # 14-08',31884
 
 /*
 DELETE
-
 */
+select fun_delete_emplea(3)
 */
-
-select * from tab_emplea;
-
+--select * from tab_emplea;
 
 
 
---tab_novedades falta por probar porque no se ha creado la tab_emplea
+
+
+--tab_novedades 
 /*
 INSERT
 SELECT fun_insert_novedades(2025,3,1,1,1,17,4500000)
+*/
+
+/*
+UPDATE
+
 */
 --select * from tab_novedades;
