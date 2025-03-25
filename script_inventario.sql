@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS tab_emplea
     val_tipo_sangre VARCHAR         NOT NULL,
     val_edad        DECIMAL(2,0)    NOT NULL    CHECK(val_edad >= 16),
 -- DATOS LABORALES
-    id_cargo        DECIMAL(2,0)    NOT NULL,
+    id_cargo        DECIMAL(2,0)    NOT NULL, --FK de la taqbla cargos
     val_sal_basico  DECIMAL(8)      NOT NULL,
     fec_ingreso     DATE            NOT NULL,
     PRIMARY KEY(id_emplea),
@@ -76,20 +76,20 @@ CREATE TABLE IF NOT EXISTS tab_conceptos
 
 CREATE TABLE IF NOT EXISTS tab_meses
 (
-    id_mes          DECIMAL(2,0)    NOT NULL    CHECK(id_mes >= 1 AND id_mes <= 12),
-    nom_mes         VARCHAR         NOT NULL,
+    id_mes          DECIMAL(2,0)    NOT NULL    CHECK(id_mes >= 1 AND id_mes <= 12), --numero único que identifica cada més
+    nom_mes         VARCHAR         NOT NULL, --nombre del mes
     PRIMARY KEY(id_mes)
 );
 
 CREATE TABLE IF NOT EXISTS tab_nomina
 (
-    ano_nom         DECIMAL(4,0)    NOT NULL,
-    mes_nom         DECIMAL(2)      NOT NULL,
-    per_nom         DECIMAL(1)      NOT NULL,
-    id_emplea       DECIMAL(10)     NOT NULL,
-    id_concepto     DECIMAL(2)      NOT NULL,
-    val_dias_trab   DECIMAL(2)      NOT NULL CHECK(val_dias_trab >= 1 AND val_dias_trab <= 30),
-    val_nomina      DECIMAL(8)      NOT NULL CHECK (val_nomina >= 0),
+    ano_nom         DECIMAL(4,0)    NOT NULL, --numero del año actual
+    mes_nom         DECIMAL(2)      NOT NULL, --mes en la que se está haciendo la nomina 
+    per_nom         DECIMAL(1)      NOT NULL, --periodo de la nomina
+    id_emplea       DECIMAL(10)     NOT NULL, --FK que referencia al empleado al que se le hace la nomina
+    id_concepto     DECIMAL(2)      NOT NULL, --Fk que especifica los detalles legales y económicos 
+    val_dias_trab   DECIMAL(2)      NOT NULL CHECK(val_dias_trab >= 1 AND val_dias_trab <= 30), --cantidad de días habiles trabajados
+    val_nomina      DECIMAL(8)      NOT NULL CHECK (val_nomina >= 0), --valor final y total de la nomina
     PRIMARY KEY(ano_nom,mes_nom,per_nom),
     FOREIGN KEY(id_emplea)      REFERENCES tab_emplea(id_emplea) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(id_concepto)    REFERENCES tab_conceptos(id_concepto) ON DELETE CASCADE ON UPDATE CASCADE
@@ -97,12 +97,12 @@ CREATE TABLE IF NOT EXISTS tab_nomina
 
 CREATE TABLE IF NOT EXISTS tab_novedades
 (
-    ano_nom         DECIMAL(4,0)    NOT NULL,
-    mes_nom         DECIMAL(2)      NOT NULL,
-    per_nom         DECIMAL(1)      NOT NULL,
-    id_emplea       DECIMAL(10)     NOT NULL,
-    id_concepto     DECIMAL(2)      NOT NULL,
-    val_dias_trab   DECIMAL(2)      NOT NULL CHECK(val_dias_trab >= 1 AND val_dias_trab <= 30),
+    ano_nom         DECIMAL(4,0)    NOT NULL, --año actual
+    mes_nom         DECIMAL(2)      NOT NULL, --mes actual
+    per_nom         DECIMAL(1)      NOT NULL, --???????????????????
+    id_emplea       DECIMAL(10)     NOT NULL, --FK para identificar un empleado 
+    id_concepto     DECIMAL(2)      NOT NULL, --FK para saber a que concepto viene relacionada la novedad
+    val_dias_trab   DECIMAL(2)      NOT NULL CHECK(val_dias_trab >= 1 AND val_dias_trab <= 30), 
     val_nomina      DECIMAL(8)      NOT NULL CHECK (val_nomina >= 0),
     PRIMARY KEY(ano_nom,mes_nom,per_nom),
     FOREIGN KEY(id_emplea)      REFERENCES tab_emplea(id_emplea) ON DELETE CASCADE ON UPDATE CASCADE,
