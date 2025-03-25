@@ -13,8 +13,8 @@ wind_perio_pago tab_pmtros.ind_perio_pago%TYPE,
 wval_smlv tab_pmtros.val_smlv%TYPE,
 wval_auxtrans tab_pmtros.val_auxtrans%TYPE,
 wind_numtrans tab_pmtros.ind_numtrans%TYPE,
-wval_ano_nom tab_pmtros.val_ano_nom%TYPE,
-wval_mes_nom tab_pmtros.val_mes_nom%TYPE,
+wano_nom tab_pmtros.ano_nom%TYPE,
+wmes_nom tab_pmtros.mes_nom%TYPE,
 wval_por_intces tab_pmtros.val_por_intces%TYPE,
 wnum_diasmes tab_pmtros.num_diasmes%TYPE
 ) RETURNS VOID AS
@@ -27,8 +27,8 @@ $$
             wval_smlv,
             wval_auxtrans,
             wind_numtrans,
-            wval_ano_nom,
-            wval_mes_nom,
+            wano_nom,
+            wmes_nom,
             wval_por_intces,
             wnum_diasmes
         );
