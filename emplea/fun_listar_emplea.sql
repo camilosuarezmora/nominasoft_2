@@ -1,3 +1,11 @@
+/*
+=============================================================
+	*función que se creó para entender el tipo de dato "RECORD"}
+	*esta función no se utiliza en el código principal por que para querys (listar/visualizar cosas) no se recomienda crear funciones
+=============================================================
+*/
+
+
 --SELECT fun_listar_emplea(91423627,1000000000);
 CREATE OR REPLACE FUNCTION fun_listar_emplea(wid_emplea tab_emplea.id_emplea%TYPE,
 											  wwid_emplea tab_emplea.id_emplea%TYPE) RETURNS BOOLEAN AS
