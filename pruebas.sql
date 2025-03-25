@@ -9,7 +9,7 @@ consola para probar todos los querys y esa vuelta
 
 /*
 para probar el fun_insert_cargos()
-	SELECT fun_insert_cargos('cargo de noob');
+	SELECT fun_insert_cargos('developer');
 */	
 
 /*
@@ -71,8 +71,8 @@ SELECT fun_update_conceptos(2, 'nombre cambiado del concepto 2',FALSE,'Q',TRUE,0
 Prueba delete:
 SELECT fun_delete_conceptos(4);
 */
-
 --SELECT * FROM tab_conceptos;
+
 
 
 
@@ -80,7 +80,7 @@ SELECT fun_delete_conceptos(4);
 --TABLA PMTROS
 /*
 insert:
-select fun_insert_pmtros('Financiera Coomultrasan','Q',1420000,200000,2,2025,1,12,30);
+select fun_insert_pmtros('MAYASOFT','Q',1420000,200000,2,2025,1,12,30);
 */
 
 /*
@@ -97,5 +97,26 @@ select fun_delete_pmtros(2);
 
 
 
---tab_novedades
-/**/
+
+
+--tab_emplea
+/*
+insert:
+SELECT fun_insert_emplea('rosa','torcoroma',false,'cra 30 # 14-08',3188477656,3,0,0,'O-',17,1,2000000,'2007-03-25');
+*/
+
+/*delete
+
+*/
+
+select * from tab_emplea;
+
+
+
+
+--tab_novedades falta por probar porque no se ha creado la tab_emplea
+/*
+INSERT
+SELECT fun_insert_novedades(2025,3,1,1,1,17,4500000)
+*/
+--select * from tab_novedades;
