@@ -121,11 +121,17 @@ select fun_delete_emplea(3)
 --tab_novedades 
 /*
 INSERT
-SELECT fun_insert_novedades(2025,3,1,1,1,17,4500000)
+SELECT fun_insert_novedades(1987,3,1,1,1,17,4500000)
 */
 
 /*
-UPDATE
+UPDATE:
+SELECT fun_update_novedades(2024,3,1,1,1,20,4500000)
+*/
+
+/*
+DELETE:
 
 */
---select * from tab_novedades;
+
+select * from tab_novedades;
