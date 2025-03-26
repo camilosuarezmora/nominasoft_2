@@ -11,7 +11,7 @@
 
 
 -- siempre debe existir un return, en caso tal de que no devuelva nada se devuelve void
-create or replace function fun_insert_cargos(wnom_cargo tab_cargos.nom_cargo%TYPE) RETURNS VARCHAR AS
+create or replace function fun_insert_cargos(wnom_cargo tab_cargos.nom_cargo%TYPE) RETURNS BOOLEAN AS
 /*"wnom_cargo tab_cargos.nom_cargo%TYPE" significa que quiero que "wnom_cargo" actue (haga casting) como "nom_cargo" de la tabla "tab_cargos"*/
 
 --$BODY$ indica que ahí empezará el cuerpo (lógica) de la función (SP)
@@ -22,12 +22,20 @@ $BODY$
             SELECT COALESCE(MAX(id_cargo),0) + 1
             FROM tab_cargos), wnom_cargo
         );
+
+        --validacioón del nom_cargo
+        IF LENGHT(wnom_cargo) < 3 OR LENGHT(wnom_cargo) > 20 THEN
+            RAISE EXCEPTION 'El nombre del cargo debe tener entre 3 y 20 caracteres';
+            RETURN FALSE;
+        END IF;
+
+        --validación de la inserción
         IF FOUND THEN
             RAISE NOTICE 'ESOOOOO, se insertó el % re bien',wnom_cargo;
-            RETURN 'Cargo insertado correctamente';
+            RETURN TRUE;
         ELSE
             RAISE NOTICE 'No se insertó una mondá';
-            RETURN 'Error al insertar el cargo';
+            RETURN FALSE;
         END IF;
     END;
 $BODY$
