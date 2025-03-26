@@ -15,6 +15,71 @@ DROP TABLE IF EXISTS tab_conceptos;
 DROP TABLE IF EXISTS tab_pmtros;
 DROP TABLE IF EXISTS tab_meses;
 
+--muestra tablas
+/*
+select * from tab_novedades;
+select * from tab_nomina;
+select * from tab_emplea;
+select * from tab_cargos;
+select * from tab_conceptos;
+select * from tab_pmtros;
+select * from tab_meses;
+*/
+
+/*tab_conceptos almacena los diferentes conceptos que se pueden aplicar a la nómina (devengados o deducidos y si informmación especifica)*/
+CREATE TABLE IF NOT EXISTS tab_conceptos
+(
+    id_concepto     DECIMAL(2)      NOT NULL,
+    nom_concepto    VARCHAR         NOT NULL CHECK(LENGTH(nom_concepto)>=5),
+    ind_operacion   BOOLEAN         NOT NULL, -- TRUE SUMA / FALSE RESTA  
+    ind_perio_pago  CHAR(1)         NOT NULL DEFAULT 'Q' CHECK(ind_perio_pago = 'Q' OR ind_perio_pago = 'M'), -- Q QUINCENA /M MENSUAL
+    neto_pagado     BOOLEAN         NOT NULL DEFAULT FALSE, --TRUE NETO PAGADO/ FALSE NO NETO PAGADO
+    val_porcent     DECIMAL(2,0)    NOT NULL CHECK(val_porcent >= 0), -- Por si el concepto se aplica con un porcentaje. Si es 0 no aplica.
+    val_fijo        DECIMAL(8,0)    NOT NULL CHECK(val_fijo >= 0), -- Por si el conbcepto debe llegar un valor fijo permanente. Puede cambiarlo el usuario
+    ind_legal       BOOLEAN         NOT NULL, --TRUE OBLIGATORIO / FALSE NO OBLIGATORIO
+    PRIMARY KEY (id_concepto)
+);
+
+
+
+
+
+/*tab_cargos almacena los diferentes roles de los trabajadores en la empresa*/
+CREATE TABLE IF NOT EXISTS tab_cargos
+(
+    id_cargo        DECIMAL(2,0)    NOT NULL,
+    nom_cargo       VARCHAR         NOT NULL    CHECK(LENGTH(nom_cargo)>3),     --el nombre del cargo debe ser mayor a 3 caracteres
+    PRIMARY KEY(id_cargo)
+);
+/*
+INSERT INTO tab_cargos VALUES (1,'Gerente General');
+INSERT INTO tab_cargos VALUES (2,'Gerente de Ventas');
+INSERT INTO tab_cargos VALUES (3,'Gerente de TI');
+INSERT INTO tab_cargos VALUES (4,'Gerente de RRHH');
+INSERT INTO tab_cargos VALUES (5,'Gerente comercial');
+INSERT INTO tab_cargos VALUES (6,'Asistente de gerencia');
+INSERT INTO tab_cargos VALUES (7,'Subgerente de Seguridad de la información (CISO)');
+INSERT INTO tab_cargos VALUES (8,'Secretaría General');
+INSERT INTO tab_cargos VALUES (9,'Webmaster');
+INSERT INTO tab_cargos VALUES (10,'Desarrollador Senior');
+INSERT INTO tab_cargos VALUES (11,'Desarrollador Junior');
+INSERT INTO tab_cargos VALUES (12,'Tester');
+INSERT INTO tab_cargos VALUES (13,'Documentador');
+INSERT INTO tab_cargos VALUES (14,'Scrum Master');
+INSERT INTO tab_cargos VALUES (15,'Diseñador');
+INSERT INTO tab_cargos VALUES (16,'Vendedor');
+INSERT INTO tab_cargos VALUES (17,'Quality Officer');
+INSERT INTO tab_cargos VALUES (18,'Servicios Generales');
+INSERT INTO tab_cargos VALUES (19,'Vigilante');
+INSERT INTO tab_cargos VALUES (20,'Mensajero');
+*/
+
+
+
+
+
+
+
 /*información sobre los meses (id y nombre)*/
 CREATE TABLE IF NOT EXISTS tab_meses
 (
@@ -40,7 +105,11 @@ INSERT INTO tab_meses VALUES(12,'Diciembre');
 */
 
 
--- SECCIÓN DE CREACIÓN DE TABLAS, PARA INICIAR EL PROCESO
+
+
+
+
+
 CREATE TABLE IF NOT EXISTS tab_pmtros
 (
     id_empresa      DECIMAL(10,0)   NOT NULL, -- ID de la empresa que liquida la nómina
@@ -64,37 +133,8 @@ INSERT INTO tab_pmtros VALUES(123456,'EMPRESA LA COSITA RICA','Q',1423500,200000
 
 
 
-/*tab_cargos almacena los diferentes roles de los trabajadores en la empresa*/
-CREATE TABLE IF NOT EXISTS tab_cargos
-(
-    id_cargo        DECIMAL(2,0)    NOT NULL,
-    nom_cargo       VARCHAR         NOT NULL    CHECK(LENGTH(nom_cargo) BETWEEN 3 AND 20),     --el nombre del cargo debe ser mayor a 3 caracteres
-    PRIMARY KEY(id_cargo)
-);
 
-/*
-/*inserciones de la tabla cargos*/
-select fun_insert_cargos('Gerente General');
-select fun_insert_cargos('Gerente de Ventas');
-select fun_insert_cargos('Gerente de TI');
-select fun_insert_cargos('Gerente de RRHH');
-select fun_insert_cargos('Gerente comercial');
-select fun_insert_cargos('Asistente de gerencia');
-select fun_insert_cargos('Subgerente de Seguridad de la información (CISO)');
-select fun_insert_cargos('Secretaría General');
-select fun_insert_cargos('Webmaster');
-select fun_insert_cargos('Desarrollador Senior');
-select fun_insert_cargos('Desarrollador Junior');
-select fun_insert_cargos('Tester');
-select fun_insert_cargos('Documentador');
-select fun_insert_cargos('Scrum Master');
-select fun_insert_cargos('Diseñador');
-select fun_insert_cargos('Vendedor');
-select fun_insert_cargos('Quality Officer');
-select fun_insert_cargos('Servicios Generales');
-select fun_insert_cargos('Vigilante');
-select fun_insert_cargos('Mensajero');
-*/
+
 
 /* tab_emplea almacena toda la información de los empleados (trabajadores) */
 CREATE TABLE IF NOT EXISTS tab_emplea
@@ -123,10 +163,11 @@ CREATE TABLE IF NOT EXISTS tab_emplea
 
 
 -- /*Llena tabla*/
--- INSERT INTO tab_emplea VALUES(91423627,'Carlos Eduardo','Perez Rueda',FALSE,'Calle 20',3503421739,4,0,3,'A+',61,1,10000000,'2024-01-01');
--- INSERT INTO tab_emplea VALUES(1032505813,'Laura Juliana','Perez Barrera',TRUE,'Calle 138 Carrera 54',3102454737,5,0,0,'A+',25,2,8000000,'2024-10-01');
--- INSERT INTO tab_emplea VALUES(1014182933,'Maria camila','Perez Barrera',TRUE,'San Agustin de Guadalix',3122241234,5,1,1,'O+',27,3,9000000,'2024-02-01');
-
+/*
+INSERT INTO tab_emplea VALUES(91423627,'Carlos Eduardo','Perez Rueda',FALSE,'Calle 20',3503421739,4,0,3,'A+',61,1,10000000,'2024-01-01');
+INSERT INTO tab_emplea VALUES(1032505813,'Laura Juliana','Perez Barrera',TRUE,'Calle 138 Carrera 54',3102454737,5,0,0,'A+',25,2,8000000,'2024-10-01');
+INSERT INTO tab_emplea VALUES(1014182933,'Maria camila','Perez Barrera',TRUE,'San Agustin de Guadalix',3122241234,5,1,1,'O+',27,3,9000000,'2024-02-01');
+*/
 
 /*Indices del emplea(do) xq sí*/
 CREATE INDEX idx_nom_emplea      ON tab_emplea(nom_emplea);
@@ -138,19 +179,6 @@ CREATE INDEX idx_val_tipo_sangre ON tab_emplea(val_tipo_sangre);
 
 
 
-/*tab_conceptos almacena los diferentes conceptos que se pueden aplicar a la nómina (devengados o deducidos y si informmación especifica)*/
-CREATE TABLE IF NOT EXISTS tab_conceptos
-(
-    id_concepto     DECIMAL(2)      NOT NULL,
-    nom_concepto    VARCHAR         NOT NULL CHECK(LENGTH(nom_concepto)>=5),
-    ind_operacion   BOOLEAN         NOT NULL, -- TRUE SUMA / FALSE RESTA  
-    ind_perio_pago  CHAR(1)         NOT NULL DEFAULT 'Q' CHECK(ind_perio_pago = 'Q' OR ind_perio_pago = 'M'), -- Q QUINCENA /M MENSUAL
-    neto_pagado     BOOLEAN         NOT NULL DEFAULT FALSE, --TRUE NETO PAGADO/ FALSE NO NETO PAGADO
-    val_porcent     DECIMAL(2,0)    NOT NULL CHECK(val_porcent >= 0), -- Por si el concepto se aplica con un porcentaje. Si es 0 no aplica.
-    val_fijo        DECIMAL(8,0)    NOT NULL CHECK(val_fijo >= 0), -- Por si el conbcepto debe llegar un valor fijo permanente. Puede cambiarlo el usuario
-    ind_legal       BOOLEAN         NOT NULL, --TRUE OBLIGATORIO / FALSE NO OBLIGATORIO
-    PRIMARY KEY (id_concepto)
-);
 
 
 
