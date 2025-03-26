@@ -42,7 +42,7 @@ INSERT INTO tab_pmtros VALUES(123456,'EMPRESA LA COSITA RICA','Q',1423500,200000
 CREATE TABLE IF NOT EXISTS tab_cargos
 (
     id_cargo        DECIMAL(2,0)    NOT NULL,
-    nom_cargo       VARCHAR         NOT NULL,
+    nom_cargo       VARCHAR         NOT NULL    CHECK(LENGTH(nom_cargo) BETWEEN 3 AND 20),     --el nombre del cargo debe ser mayor a 3 caracteres
     PRIMARY KEY(id_cargo)
 );
 
