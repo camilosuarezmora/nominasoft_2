@@ -204,7 +204,7 @@ CREATE TABLE IF NOT EXISTS tab_nomina
     id_concepto     DECIMAL(2)      NOT NULL, --Fk que especifica los detalles legales y económicos 
     val_dias_trab   DECIMAL(2)      NOT NULL    CHECK(val_dias_trab BETWEEN 1 AND 30), --cantidad de días habiles trabajados
     val_nomina      DECIMAL(8)      NOT NULL    CHECK (val_nomina >= 0), --valor final y total de la nomina
-    PRIMARY KEY(ano_nom,mes_nom,per_nom),
+    PRIMARY KEY(ano_nom,mes_nom,per_nom,id_emplea,id_concepto),
     FOREIGN KEY(id_emplea)      REFERENCES tab_emplea(id_emplea)        ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(id_concepto)    REFERENCES tab_conceptos(id_concepto)   ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(mes_nom)        REFERENCES tab_meses(id_mes)        ON DELETE CASCADE ON UPDATE CASCADE
@@ -223,9 +223,16 @@ CREATE TABLE IF NOT EXISTS tab_novedades
     id_emplea       DECIMAL(10)     NOT NULL, --FK para identificar un empleado 
     id_concepto     DECIMAL(2)      NOT NULL, --FK para saber a que concepto viene relacionada la novedad
     val_dias_trab   DECIMAL(2)      NOT NULL CHECK(val_dias_trab >= 1 AND val_dias_trab <= 30), 
-    val_nomina      DECIMAL(8)      NOT NULL CHECK (val_nomina >= 0),
-    PRIMARY KEY(ano_nom,mes_nom,per_nom),
+    PRIMARY KEY(ano_nom,mes_nom,per_nom,id_emplea,id_concepto),
     FOREIGN KEY(id_emplea)      REFERENCES tab_emplea(id_emplea)        ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(id_concepto)    REFERENCES tab_conceptos(id_concepto)   ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(mes_nom)        REFERENCES tab_meses(id_mes)            ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+/*
+insert into tab_novedades values(2025,1,1,91423627,6,30);
+insert into tab_novedades values(2025,1,1,1032505813,6,20);
+insert into tab_novedades values(2025,1,1,1014182933,6,15);
+insert into tab_novedades values(2024,3,1,1099740009,1,30);
+
+*/
