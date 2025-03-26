@@ -15,17 +15,11 @@ DROP TABLE IF EXISTS tab_conceptos;
 DROP TABLE IF EXISTS tab_pmtros;
 DROP TABLE IF EXISTS tab_meses;
 
---muestra tablas
-/*
-select * from tab_novedades;
-select * from tab_nomina;
-select * from tab_emplea;
-select * from tab_cargos;
-select * from tab_conceptos;
-select * from tab_pmtros;
-select * from tab_meses;
-*/
 
+
+
+
+-- select * from tab_conceptos;
 /*tab_conceptos almacena los diferentes conceptos que se pueden aplicar a la nómina (devengados o deducidos y si informmación especifica)*/
 CREATE TABLE IF NOT EXISTS tab_conceptos
 (
@@ -33,17 +27,30 @@ CREATE TABLE IF NOT EXISTS tab_conceptos
     nom_concepto    VARCHAR         NOT NULL CHECK(LENGTH(nom_concepto)>=5),
     ind_operacion   BOOLEAN         NOT NULL, -- TRUE SUMA / FALSE RESTA  
     ind_perio_pago  CHAR(1)         NOT NULL DEFAULT 'Q' CHECK(ind_perio_pago = 'Q' OR ind_perio_pago = 'M'), -- Q QUINCENA /M MENSUAL
-    neto_pagado     BOOLEAN         NOT NULL DEFAULT FALSE, --TRUE NETO PAGADO/ FALSE NO NETO PAGADO
+    neto_pagado     BOOLEAN         NOT NULL DEFAULT FALSE, --TRUE si equivale al NETO PAGADO / FALSE NO equivale al NETO PAGADO
     val_porcent     DECIMAL(2,0)    NOT NULL CHECK(val_porcent >= 0), -- Por si el concepto se aplica con un porcentaje. Si es 0 no aplica.
     val_fijo        DECIMAL(8,0)    NOT NULL CHECK(val_fijo >= 0), -- Por si el conbcepto debe llegar un valor fijo permanente. Puede cambiarlo el usuario
     ind_legal       BOOLEAN         NOT NULL, --TRUE OBLIGATORIO / FALSE NO OBLIGATORIO
     PRIMARY KEY (id_concepto)
 );
 
+--DATOS PA LLENAR
+/*
+INSERT INTO tab_conceptos VALUES (1,'Salario Básico',TRUE,'Q',FALSE,0,0,TRUE);
+INSERT INTO tab_conceptos VALUES (2,'Auxilio de Transporte',TRUE,'Q',FALSE,0,0,TRUE);
+INSERT INTO tab_conceptos VALUES (3,'Entidad Prestadora de Salud (EPS)',FALSE,'M',FALSE,12,0,TRUE);
+INSERT INTO tab_conceptos VALUES (4,'Administradora De Pensión (AFP)',FALSE,'M',FALSE,16,0,TRUE);
+INSERT INTO tab_conceptos VALUES (5,'NETO PAGADO',FALSE,'Q',TRUE,0,0,TRUE);
+INSERT INTO tab_conceptos VALUES (1,'Bonificación por puntualidad',TRUE,'M',FALSE,0,100000,FALSE);
+
+*/
 
 
 
 
+
+
+-- select * from tab_cargos;
 /*tab_cargos almacena los diferentes roles de los trabajadores en la empresa*/
 CREATE TABLE IF NOT EXISTS tab_cargos
 (
@@ -79,7 +86,7 @@ INSERT INTO tab_cargos VALUES (20,'Mensajero');
 
 
 
-
+-- select * from tab_meses;
 /*información sobre los meses (id y nombre)*/
 CREATE TABLE IF NOT EXISTS tab_meses
 (
@@ -109,7 +116,7 @@ INSERT INTO tab_meses VALUES(12,'Diciembre');
 
 
 
-
+-- select * from tab_pmtros;
 CREATE TABLE IF NOT EXISTS tab_pmtros
 (
     id_empresa      DECIMAL(10,0)   NOT NULL, -- ID de la empresa que liquida la nómina
@@ -135,7 +142,7 @@ INSERT INTO tab_pmtros VALUES(123456,'EMPRESA LA COSITA RICA','Q',1423500,200000
 
 
 
-
+-- select * from tab_emplea;
 /* tab_emplea almacena toda la información de los empleados (trabajadores) */
 CREATE TABLE IF NOT EXISTS tab_emplea
 (
@@ -167,6 +174,7 @@ CREATE TABLE IF NOT EXISTS tab_emplea
 INSERT INTO tab_emplea VALUES(91423627,'Carlos Eduardo','Perez Rueda',FALSE,'Calle 20',3503421739,4,0,3,'A+',61,1,10000000,'2024-01-01');
 INSERT INTO tab_emplea VALUES(1032505813,'Laura Juliana','Perez Barrera',TRUE,'Calle 138 Carrera 54',3102454737,5,0,0,'A+',25,2,8000000,'2024-10-01');
 INSERT INTO tab_emplea VALUES(1014182933,'Maria camila','Perez Barrera',TRUE,'San Agustin de Guadalix',3122241234,5,1,1,'O+',27,3,9000000,'2024-02-01');
+INSERT INTO tab_emplea VALUES(1099740009,'Jhoan Camilo','Suárez Mora',false,'San Alonso',3188477656,3,0,0,'O+',17,10,50000000,'2024-03-25');
 */
 
 /*Indices del emplea(do) xq sí*/
@@ -185,7 +193,7 @@ CREATE INDEX idx_val_tipo_sangre ON tab_emplea(val_tipo_sangre);
 
 
 
-
+select * from tab_nomina;
 /*resultado de la nomina, recopilación del resto de información en un solo documento de nomina*/
 CREATE TABLE IF NOT EXISTS tab_nomina
 (
@@ -205,7 +213,7 @@ CREATE TABLE IF NOT EXISTS tab_nomina
 
 
 
-
+-- select * from tab_novedades;
 /*novedades en la nomina, cambios o ajustes que se le hacen a la nomina*/
 CREATE TABLE IF NOT EXISTS tab_novedades
 (
