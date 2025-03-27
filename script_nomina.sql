@@ -165,6 +165,8 @@ CREATE TABLE IF NOT EXISTS tab_emplea
     ind_est_civil   DECIMAL(1)      NOT NULL    CHECK(ind_est_civil BETWEEN 0 AND 4), -- 0:Soltero / 1:Casado / 2:Divorciado / 3:Viudo / 4:Otro
     num_hijos       DECIMAL(1,0)    NOT NULL    CHECK(num_hijos >= 0 AND num_hijos = FLOOR(num_hijos)), --número de hijos
     val_tipo_sangre VARCHAR         NOT NULL,
+
+/*se debería calcular la edad del empleado en vez de decirlo directamente*/
     val_edad        DECIMAL(2,0)    NOT NULL    CHECK(val_edad >= 16),
 -- DATOS LABORALES
     id_cargo        DECIMAL(2,0)    NOT NULL, --FK de la taqbla cargos
