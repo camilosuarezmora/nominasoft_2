@@ -135,8 +135,15 @@ CREATE TABLE IF NOT EXISTS tab_pmtros
     mes_nom         DECIMAL(2)      NOT NULL                    CHECK(mes_nom >= 1 AND mes_nom <= 12), --MES VIGENTE
     val_por_intces  DECIMAL(2,0)    NOT NULL    DEFAULT 12, -- Vr. porcentaje de intereses a la cesantía
     num_diasmes     DECIMAL(2,0)    NOT NULL    DEFAULT 30, -- Número de días del mes fiscal
+    id_concep_sb    DECIMAL(2,0)    NOT NULL, -- FK para el concepto de salario básico
+    id_concep_at    DECIMAL(2,0)    NOT NULL, -- FK para el concepto de auxilio de transporte
+
+
+
     PRIMARY KEY(id_empresa),
     FOREIGN KEY(mes_nom)    REFERENCES tab_meses(id_mes)    ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (id_concep_sb) REFERENCES tab_conceptos(id_concepto) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (id_concep_at) REFERENCES tab_conceptos(id_concepto) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 /*
@@ -211,22 +218,6 @@ CREATE INDEX idx_val_tipo_sangre ON tab_emplea(val_tipo_sangre);
 
 
 
-select * from tab_nomina;
-/*resultado de la nomina, recopilación del resto de información en un solo documento de nomina*/
-CREATE TABLE IF NOT EXISTS tab_nomina
-(
-    ano_nomina         DECIMAL(4,0)    NOT NULL, --numero del año actual
-    mes_nomina       DECIMAL(2)      NOT NULL, --mes en la que se está haciendo la nomina 
-    per_nom         DECIMAL(1)      NOT NULL, --periodo de la nomina
-    id_emplea       DECIMAL(10)     NOT NULL, --FK que referencia al empleado al que se le hace la nomina
-    id_concepto     DECIMAL(2)      NOT NULL, --Fk que especifica los detalles legales y económicos 
-    val_dias_trab   DECIMAL(2)      NOT NULL    CHECK(val_dias_trab BETWEEN 1 AND 30), --cantidad de días habiles trabajados
-    val_nomina      DECIMAL(8)      NOT NULL    CHECK (val_nomina >= 0), --valor final y total de la nomina
-    PRIMARY KEY(ano_nomina,mes_nomina,per_nom,id_emplea,id_concepto),
-    FOREIGN KEY(id_emplea)      REFERENCES tab_emplea(id_emplea)        ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(id_concepto)    REFERENCES tab_conceptos(id_concepto)   ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(mes_nomina)        REFERENCES tab_meses(id_mes)        ON DELETE CASCADE ON UPDATE CASCADE
-);
 
 
 
@@ -258,3 +249,26 @@ INSERT INTO tab_novedades VALUES(2025,1,1,1015000001,9,15,10);
 INSERT INTO tab_novedades VALUES(2025,1,1,1015000004,6,15,0);
 INSERT INTO tab_novedades VALUES(2025,1,1,1015000004,10,15,10);
 */
+
+
+
+
+
+
+
+select * from tab_nomina;
+/*resultado de la nomina, recopilación del resto de información en un solo documento de nomina*/
+CREATE TABLE IF NOT EXISTS tab_nomina
+(
+    ano_nomina         DECIMAL(4,0)    NOT NULL, --numero del año actual
+    mes_nomina       DECIMAL(2)      NOT NULL, --mes en la que se está haciendo la nomina 
+    per_nom         DECIMAL(1)      NOT NULL, --periodo de la nomina
+    id_emplea       DECIMAL(10)     NOT NULL, --FK que referencia al empleado al que se le hace la nomina
+    id_concepto     DECIMAL(2)      NOT NULL, --Fk que especifica los detalles legales y económicos 
+    val_dias_trab   DECIMAL(2)      NOT NULL    CHECK(val_dias_trab BETWEEN 1 AND 30), --cantidad de días habiles trabajados
+    val_nomina      DECIMAL(8)      NOT NULL    CHECK (val_nomina >= 0), --valor final y total de la nomina
+    PRIMARY KEY(ano_nomina,mes_nomina,per_nom,id_emplea,id_concepto),
+    FOREIGN KEY(id_emplea)      REFERENCES tab_emplea(id_emplea)        ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(id_concepto)    REFERENCES tab_conceptos(id_concepto)   ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(mes_nomina)        REFERENCES tab_meses(id_mes)        ON DELETE CASCADE ON UPDATE CASCADE
+);
