@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS tab_conceptos
     ind_operacion   BOOLEAN         NOT NULL, -- TRUE SUMA / FALSE RESTA  
     ind_perio_pago  CHAR(1)         NOT NULL DEFAULT 'Q' CHECK(ind_perio_pago = 'Q' OR ind_perio_pago = 'M'), -- Q QUINCENA /M MENSUAL
     neto_pagado     BOOLEAN         NOT NULL DEFAULT FALSE, --TRUE si equivale al NETO PAGADO / FALSE NO equivale al NETO PAGADO
-    val_porcent     DECIMAL(2,0)    NOT NULL CHECK(val_porcent >= 0), -- Por si el concepto se aplica con un porcentaje. Si es 0 no aplica.
+    val_porcent     DECIMAL(3,0)    NOT NULL CHECK(val_porcent >= 0), -- Por si el concepto se aplica con un porcentaje. Si es 0 no aplica.
     val_fijo        DECIMAL(8,0)    NOT NULL CHECK(val_fijo >= 0), -- Por si el conbcepto debe llegar un valor fijo permanente. Puede cambiarlo el usuario
     ind_legal       BOOLEAN         NOT NULL, --TRUE OBLIGATORIO / FALSE NO OBLIGATORIO
     PRIMARY KEY (id_concepto)
@@ -36,12 +36,17 @@ CREATE TABLE IF NOT EXISTS tab_conceptos
 
 --DATOS PA LLENAR
 /*
-INSERT INTO tab_conceptos VALUES (1,'Salario Básico',TRUE,'Q',FALSE,0,0,TRUE);
-INSERT INTO tab_conceptos VALUES (2,'Auxilio de Transporte',TRUE,'Q',FALSE,0,0,TRUE);
-INSERT INTO tab_conceptos VALUES (3,'Entidad Prestadora de Salud (EPS)',FALSE,'M',FALSE,12,0,TRUE);
-INSERT INTO tab_conceptos VALUES (4,'Administradora De Pensión (AFP)',FALSE,'M',FALSE,16,0,TRUE);
-INSERT INTO tab_conceptos VALUES (5,'NETO PAGADO',FALSE,'Q',TRUE,0,0,TRUE);
-INSERT INTO tab_conceptos VALUES (1,'Bonificación por puntualidad',TRUE,'M',FALSE,0,100000,FALSE);
+INSERT INTO tab_conceptos VALUES(1,'Salario Básico',TRUE,'Q',FALSE,0,0,TRUE);
+INSERT INTO tab_conceptos VALUES(2,'Auxilio de Transporte',TRUE,'Q',FALSE,0,0,TRUE);
+INSERT INTO tab_conceptos VALUES(3,'Entidad Prestadora de Salud (EPS)',FALSE,'M',FALSE,12,0,TRUE);
+INSERT INTO tab_conceptos VALUES(4,'Administradora de Pensión (AFP)',FALSE,'M',FALSE,16,0,TRUE);
+INSERT INTO tab_conceptos VALUES(5,'NETO PAGADO',FALSE,'Q',TRUE,0,0,TRUE);
+INSERT INTO tab_conceptos VALUES(6,'Bonificación por chismoso',TRUE,'M',FALSE,0,100000,FALSE);
+INSERT INTO tab_conceptos VALUES(7,'Horas Extras Diurnas',TRUE,'Q',FALSE,25,0,FALSE);
+INSERT INTO tab_conceptos VALUES(8,'Horas Extras Nocturna',TRUE,'Q',FALSE,75,0,FALSE);
+INSERT INTO tab_conceptos VALUES(9,'Horas Extras Festivas Diurnas',TRUE,'Q',FALSE,100,0,FALSE);
+INSERT INTO tab_conceptos VALUES(10,'Horas Extras Fetivas Nocturnas',TRUE,'Q',FALSE,150,0,FALSE);
+INSERT INTO tab_conceptos VALUES(11,'Descuento por Préstamo',FALSE,'M',FALSE,10,0,FALSE);
 
 */
 
@@ -55,30 +60,31 @@ INSERT INTO tab_conceptos VALUES (1,'Bonificación por puntualidad',TRUE,'M',FAL
 CREATE TABLE IF NOT EXISTS tab_cargos
 (
     id_cargo        DECIMAL(2,0)    NOT NULL,
-    nom_cargo       VARCHAR         NOT NULL    CHECK(LENGTH(nom_cargo)>3),     --el nombre del cargo debe ser mayor a 3 caracteres
+    nom_cargo       VARCHAR         NOT NULL    CHECK(LENGTH(nom_cargo)>=5),     --el nombre del cargo debe ser mayor a 3 caracteres
     PRIMARY KEY(id_cargo)
 );
+
 /*
-INSERT INTO tab_cargos VALUES (1,'Gerente General');
-INSERT INTO tab_cargos VALUES (2,'Gerente de Ventas');
-INSERT INTO tab_cargos VALUES (3,'Gerente de TI');
-INSERT INTO tab_cargos VALUES (4,'Gerente de RRHH');
-INSERT INTO tab_cargos VALUES (5,'Gerente comercial');
-INSERT INTO tab_cargos VALUES (6,'Asistente de gerencia');
-INSERT INTO tab_cargos VALUES (7,'Subgerente de Seguridad de la información (CISO)');
-INSERT INTO tab_cargos VALUES (8,'Secretaría General');
-INSERT INTO tab_cargos VALUES (9,'Webmaster');
-INSERT INTO tab_cargos VALUES (10,'Desarrollador Senior');
-INSERT INTO tab_cargos VALUES (11,'Desarrollador Junior');
-INSERT INTO tab_cargos VALUES (12,'Tester');
-INSERT INTO tab_cargos VALUES (13,'Documentador');
-INSERT INTO tab_cargos VALUES (14,'Scrum Master');
-INSERT INTO tab_cargos VALUES (15,'Diseñador');
-INSERT INTO tab_cargos VALUES (16,'Vendedor');
-INSERT INTO tab_cargos VALUES (17,'Quality Officer');
-INSERT INTO tab_cargos VALUES (18,'Servicios Generales');
-INSERT INTO tab_cargos VALUES (19,'Vigilante');
-INSERT INTO tab_cargos VALUES (20,'Mensajero');
+INSERT INTO tab_cargos VALUES(1,'Gerente General');
+INSERT INTO tab_cargos VALUES(2,'Secretaria General');
+INSERT INTO tab_cargos VALUES(3,'Gerente Comercial');
+INSERT INTO tab_cargos VALUES(4,'Gerente Financiero');
+INSERT INTO tab_cargos VALUES(5,'Gerente de TI');
+INSERT INTO tab_cargos VALUES(6,'Gerente de Mercadeo');
+INSERT INTO tab_cargos VALUES(7,'Director de Seguridad de la Información');
+INSERT INTO tab_cargos VALUES(8,'Scrum Master');
+INSERT INTO tab_cargos VALUES(9,'Desarrollador Front Senior');
+INSERT INTO tab_cargos VALUES(10,'Desarrollador Front Junior');
+INSERT INTO tab_cargos VALUES(11,'Desarrollador Back Senior');
+INSERT INTO tab_cargos VALUES(12,'Desarrollador Back Junior');
+INSERT INTO tab_cargos VALUES(13,'Diseñador');
+INSERT INTO tab_cargos VALUES(14,'Tester');
+INSERT INTO tab_cargos VALUES(15,'Documentador');
+INSERT INTO tab_cargos VALUES(16,'Servicios Generales');
+INSERT INTO tab_cargos VALUES(17,'Mensajero');
+INSERT INTO tab_cargos VALUES(18,'Auxiliar Contable');
+INSERT INTO tab_cargos VALUES(19,'Director Contable');
+INSERT INTO tab_cargos VALUES(20,'Vigilante');
 */
 
 
@@ -171,10 +177,20 @@ CREATE TABLE IF NOT EXISTS tab_emplea
 
 -- /*Llena tabla*/
 /*
-INSERT INTO tab_emplea VALUES(91423627,'Carlos Eduardo','Perez Rueda',FALSE,'Calle 20',3503421739,4,0,3,'A+',61,1,10000000,'2024-01-01');
-INSERT INTO tab_emplea VALUES(1032505813,'Laura Juliana','Perez Barrera',TRUE,'Calle 138 Carrera 54',3102454737,5,0,0,'A+',25,2,8000000,'2024-10-01');
-INSERT INTO tab_emplea VALUES(1014182933,'Maria camila','Perez Barrera',TRUE,'San Agustin de Guadalix',3122241234,5,1,1,'O+',27,3,9000000,'2024-02-01');
-INSERT INTO tab_emplea VALUES(1099740009,'Jhoan Camilo','Suárez Mora',false,'San Alonso',3188477656,3,0,0,'O+',17,10,50000000,'2024-03-25');
+INSERT INTO tab_emplea VALUES(91423627,'Carlos Eduardo','Perez Rueda',FALSE,'Calle 20',3503421739,4,0,3,'A+',61,5,10000000,'2024-01-01');
+INSERT INTO tab_emplea VALUES(1032505813,'Laura Juliana','Perez Barrera',TRUE,'Calle 138 Carrera 54',3102454737,5,0,0,'A+',25,3,8000000,'2024-10-01');
+INSERT INTO tab_emplea VALUES(1014182933,'Maria camila','Perez Barrera',TRUE,'San Agustin de Guadalix',3122241234,5,1,1,'O+',27,4,8500000,'2024-02-01');
+INSERT INTO tab_emplea VALUES(1067062169,'Paula Sofia','Perez Moscoso',TRUE,'Arboretto Piedecuesta',3133216625,4,0,0,'O+',16,8,6500000,'2024-01-01');
+INSERT INTO tab_emplea VALUES(1015000000,'Carlos Chaparro','Perez Moscoso',FALSE,'Girón',3102222222,4,0,0,'O+',40,9,6000000,'2024-01-01');
+INSERT INTO tab_emplea VALUES(1015000001,'Esteban Francisco','Janiot Rivera',FALSE,'Avda. Q. Seca San Alonso',3103333333,4,0,1,'O+',26,9,6000000,'2024-01-01');
+INSERT INTO tab_emplea VALUES(1015000002,'Juan Pablo','Lopez Bobito',FALSE,'Piedecuesta',3104444444,4,0,1,'A+',18,12,5000000,'2024-01-01');
+INSERT INTO tab_emplea VALUES(1015000003,'Joan','Portilla',FALSE,'Piedecuesta Molino',3105555555,4,0,1,'A-',18,9,5500000,'2024-01-01');
+INSERT INTO tab_emplea VALUES(1015000004,'Juana','La Loca',TRUE,'Calle 28 Cra. 18',3106666666,3,0,3,'A-',25,16,2500000,'2024-01-01');
+INSERT INTO tab_emplea VALUES(1015000005,'Pedro','El Escamoso',FALSE,'Lebrija',3107777777,3,0,2,'A+',35,20,2000000,'2024-01-01');
+INSERT INTO tab_emplea VALUES(1015000006,'Juanito','Alimaña',FALSE,'Piedecuesta Barro Blanco',3108888888,2,0,4,'O-',40,20,2000000,'2024-01-01');
+INSERT INTO tab_emplea VALUES(1015000007,'Yoshitomo','Cacaito',FALSE,'Rionegro',3109999999,2,0,5,'A+',28,16,2500000,'2024-01-01');
+INSERT INTO tab_emplea VALUES(1015000008,'Yessenya Vanessa','Sanabria de Janiot',TRUE,'San Miguel Casa 20',3111111111,3,0,1,'A-',25,13,4500000,'2024-01-01');
+
 */
 
 /*Indices del emplea(do) xq sí*/
@@ -197,17 +213,17 @@ select * from tab_nomina;
 /*resultado de la nomina, recopilación del resto de información en un solo documento de nomina*/
 CREATE TABLE IF NOT EXISTS tab_nomina
 (
-    ano_nom         DECIMAL(4,0)    NOT NULL, --numero del año actual
-    mes_nom         DECIMAL(2)      NOT NULL, --mes en la que se está haciendo la nomina 
+    ano_nomina         DECIMAL(4,0)    NOT NULL, --numero del año actual
+    mes_nomina       DECIMAL(2)      NOT NULL, --mes en la que se está haciendo la nomina 
     per_nom         DECIMAL(1)      NOT NULL, --periodo de la nomina
     id_emplea       DECIMAL(10)     NOT NULL, --FK que referencia al empleado al que se le hace la nomina
     id_concepto     DECIMAL(2)      NOT NULL, --Fk que especifica los detalles legales y económicos 
     val_dias_trab   DECIMAL(2)      NOT NULL    CHECK(val_dias_trab BETWEEN 1 AND 30), --cantidad de días habiles trabajados
     val_nomina      DECIMAL(8)      NOT NULL    CHECK (val_nomina >= 0), --valor final y total de la nomina
-    PRIMARY KEY(ano_nom,mes_nom,per_nom,id_emplea,id_concepto),
+    PRIMARY KEY(ano_nomina,mes_nomina,per_nom,id_emplea,id_concepto),
     FOREIGN KEY(id_emplea)      REFERENCES tab_emplea(id_emplea)        ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(id_concepto)    REFERENCES tab_conceptos(id_concepto)   ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(mes_nom)        REFERENCES tab_meses(id_mes)        ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY(mes_nomina)        REFERENCES tab_meses(id_mes)        ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -217,22 +233,26 @@ CREATE TABLE IF NOT EXISTS tab_nomina
 /*novedades en la nomina, cambios o ajustes que se le hacen a la nomina*/
 CREATE TABLE IF NOT EXISTS tab_novedades
 (
-    ano_nom         DECIMAL(4,0)    NOT NULL, --año actual
-    mes_nom         DECIMAL(2)      NOT NULL, --mes actual
-    per_nom         DECIMAL(1)      NOT NULL, --???????????????????
+    ano_nomina      DECIMAL(4,0)    NOT NULL, --año actual
+    mes_nomina      DECIMAL(2)      NOT NULL, --mes actual
+    per_nomina         DECIMAL(1)      NOT NULL, --???????????????????
     id_emplea       DECIMAL(10)     NOT NULL, --FK para identificar un empleado 
     id_concepto     DECIMAL(2)      NOT NULL, --FK para saber a que concepto viene relacionada la novedad
     val_dias_trab   DECIMAL(2)      NOT NULL CHECK(val_dias_trab >= 1 AND val_dias_trab <= 30), 
-    PRIMARY KEY(ano_nom,mes_nom,per_nom,id_emplea,id_concepto),
+    val_horas_trab DECIMAL(2)   NOT NULL CHECK(val_horas_trab >= 1 AND val_horas_trab <= 24),
+    PRIMARY KEY(ano_nomina,mes_nomina,per_nomina,id_emplea,id_concepto),
     FOREIGN KEY(id_emplea)      REFERENCES tab_emplea(id_emplea)        ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(id_concepto)    REFERENCES tab_conceptos(id_concepto)   ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(mes_nom)        REFERENCES tab_meses(id_mes)            ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY(mes_nomina)        REFERENCES tab_meses(id_mes)            ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 /*
-insert into tab_novedades values(2025,1,1,91423627,6,30);
-insert into tab_novedades values(2025,1,1,1032505813,6,20);
-insert into tab_novedades values(2025,1,1,1014182933,6,15);
-insert into tab_novedades values(2024,3,1,1099740009,1,30);
-
+-- NOVEDADES PARA ENERO QUINCENA 1
+INSERT INTO tab_novedades VALUES(2025,1,1,91423627,6,15,0);
+INSERT INTO tab_novedades VALUES(2025,1,1,1032505813,6,15,0);
+INSERT INTO tab_novedades VALUES(2025,1,1,1067062169,6,15,0);
+INSERT INTO tab_novedades VALUES(2025,1,1,1015000000,7,15,5);
+INSERT INTO tab_novedades VALUES(2025,1,1,1015000001,9,15,10);
+INSERT INTO tab_novedades VALUES(2025,1,1,1015000004,6,15,0);
+INSERT INTO tab_novedades VALUES(2025,1,1,1015000004,10,15,10);
 */
