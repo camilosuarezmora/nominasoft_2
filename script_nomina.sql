@@ -11,10 +11,9 @@ DROP TABLE IF EXISTS tab_novedades;
 DROP TABLE IF EXISTS tab_nomina;
 DROP TABLE IF EXISTS tab_emplea;
 DROP TABLE IF EXISTS tab_cargos;
-DROP TABLE IF EXISTS tab_conceptos;
 DROP TABLE IF EXISTS tab_pmtros;
 DROP TABLE IF EXISTS tab_meses;
-
+DROP TABLE IF EXISTS tab_conceptos;
 
 
 
@@ -141,13 +140,13 @@ CREATE TABLE IF NOT EXISTS tab_pmtros
 
 
     PRIMARY KEY(id_empresa),
-    FOREIGN KEY(mes_nom)    REFERENCES tab_meses(id_mes)    ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY(mes_nom)    REFERENCES tab_meses(id_mes)    ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (id_concep_sb) REFERENCES tab_conceptos(id_concepto) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (id_concep_at) REFERENCES tab_conceptos(id_concepto) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 /*
-INSERT INTO tab_pmtros VALUES(123456,'EMPRESA LA COSITA RICA','Q',1423500,200000,2,2025,1,12,30);
+INSERT INTO tab_pmtros VALUES(123456,'EMPRESA LA COSITA RICA','Q',1423500,200000,2,2025,1,12,30,1,2);
 */
 
 
@@ -226,13 +225,13 @@ CREATE INDEX idx_val_tipo_sangre ON tab_emplea(val_tipo_sangre);
 /*novedades en la nomina, cambios o ajustes que se le hacen a la nomina*/
 CREATE TABLE IF NOT EXISTS tab_novedades
 (
-    ano_nomina      DECIMAL(4,0)    NOT NULL, --año actual
-    mes_nomina      DECIMAL(2)      NOT NULL, --mes actual
-    per_nomina         DECIMAL(1)      NOT NULL, --???????????????????
-    id_emplea       DECIMAL(10)     NOT NULL, --FK para identificar un empleado 
-    id_concepto     DECIMAL(2)      NOT NULL, --FK para saber a que concepto viene relacionada la novedad
-    val_dias_trab   DECIMAL(2)      NOT NULL CHECK(val_dias_trab >= 1 AND val_dias_trab <= 30), 
-    val_horas_trab DECIMAL(2)   NOT NULL CHECK(val_horas_trab >= 1 AND val_horas_trab <= 24),
+    ano_nomina		DECIMAL(4,0)    NOT NULL, --año actual
+    mes_nomina		DECIMAL(2)      NOT NULL, --mes actual
+    per_nomina		DECIMAL(1)      NOT NULL, --???????????????????
+    id_emplea		DECIMAL(10)     NOT NULL, --FK para identificar un empleado 
+    id_concepto		DECIMAL(2)      NOT NULL, --FK para saber a que concepto viene relacionada la novedad
+    val_dias_trab  	DECIMAL(2)      NOT NULL 	CHECK(val_dias_trab >= 1 AND val_dias_trab <= 30), 
+    val_horas_trab 	DECIMAL(2)   	NOT NULL 	CHECK(val_horas_trab >= 1 AND val_horas_trab <= 24),
     PRIMARY KEY(ano_nomina,mes_nomina,per_nomina,id_emplea,id_concepto),
     FOREIGN KEY(id_emplea)      REFERENCES tab_emplea(id_emplea)        ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(id_concepto)    REFERENCES tab_conceptos(id_concepto)   ON DELETE CASCADE ON UPDATE CASCADE,
@@ -241,12 +240,12 @@ CREATE TABLE IF NOT EXISTS tab_novedades
 
 /*
 -- NOVEDADES PARA ENERO QUINCENA 1
-INSERT INTO tab_novedades VALUES(2025,1,1,91423627,6,15,0);
-INSERT INTO tab_novedades VALUES(2025,1,1,1032505813,6,15,0);
-INSERT INTO tab_novedades VALUES(2025,1,1,1067062169,6,15,0);
+INSERT INTO tab_novedades VALUES(2025,1,1,91423627,6,15,1);
+INSERT INTO tab_novedades VALUES(2025,1,1,1032505813,6,15,1);
+INSERT INTO tab_novedades VALUES(2025,1,1,1067062169,6,15,1);
 INSERT INTO tab_novedades VALUES(2025,1,1,1015000000,7,15,5);
 INSERT INTO tab_novedades VALUES(2025,1,1,1015000001,9,15,10);
-INSERT INTO tab_novedades VALUES(2025,1,1,1015000004,6,15,0);
+INSERT INTO tab_novedades VALUES(2025,1,1,1015000004,6,15,1);
 INSERT INTO tab_novedades VALUES(2025,1,1,1015000004,10,15,10);
 */
 
