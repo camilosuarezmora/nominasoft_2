@@ -134,8 +134,8 @@ CREATE TABLE IF NOT EXISTS tab_pmtros
     mes_nom         DECIMAL(2)      NOT NULL                    CHECK(mes_nom >= 1 AND mes_nom <= 12), --MES VIGENTE
     val_por_intces  DECIMAL(2,0)    NOT NULL    DEFAULT 12, -- Vr. porcentaje de intereses a la cesantía
     num_diasmes     DECIMAL(2,0)    NOT NULL    DEFAULT 30, -- Número de días del mes fiscal
-    id_concep_sb    DECIMAL(2,0)    NOT NULL, -- FK para el concepto de salario básico
-    id_concep_at    DECIMAL(2,0)    NOT NULL, -- FK para el concepto de auxilio de transporte
+    id_concep_sb    DECIMAL(2,0)    NOT NULL, -- FK para identificar si el concepto es el de salario básico
+    id_concep_at    DECIMAL(2,0)    NOT NULL, -- FK para identificar si el concepto es el de auxilio de transporte
 
 
 
