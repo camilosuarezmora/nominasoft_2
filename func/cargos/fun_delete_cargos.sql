@@ -16,20 +16,35 @@ $BODY$
     --validaciones con if    
         --validaciones en el eliminado
         IF NOT FOUND THEN
-            RAISE NOTICE 'el cargo con el id % fue eliminado', wid_cargo;
+            RAISE NOTICE 'El cargo con el id % fue eliminado', wid_cargo;
             RETURN TRUE;
         ELSE 
-            RAISE NOTICE 'no se pudo borrar esa vuelta mano, paila';
+            RAISE NOTICE 'No se pudo borrar esa vuelta mano, paila';
             RETURN FALSE;
         END IF; 
 
+        IF LENGTH(wid_cargo) > 2 THEN
+            RAISE NOTICE 'El id ingresado es mayor a 2 dígitos';
+            RETURN FALSE;
+		END IF;
+
     --excepciones 
         EXCEPTION
-        WHEN no_data_found THEN
+        WHEN SQLSTATE '02000' THEN
             RAISE NOTICE 'el cargo con el id % no existe', wid_cargo;
-            RETURNS FALSE;
-        WHEN 
+            RETURN FALSE; 
     
+        WHEN SQLSTATE '23502' THEN 
+            RAISE NOTICE 'Se intentó ingresar un valor nulo';
+            RETURN FALSE;
+
+        WHEN SQLSTATE '22003' THEN
+            RAISE NOTICE 'No se pudo insertar, el número es demasiado grande';
+            RETURN FALSE;
+        
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Ocurrió un error desconocido';
+            RETURN FALSE;
 
     END;
 $BODY$
