@@ -41,7 +41,11 @@ $BODY$
         WHEN SQLSTATE '22003' THEN
             RAISE NOTICE 'No se pudo insertar, el número es demasiado grande';
             RETURN FALSE;
-        
+
+        WHEN SQLSTATE '22P02' THEN
+            RAISE NOTICE 'No se pudo insertar, el formato del dato es incorrecto';
+            RETURN FALSE;
+
         WHEN OTHERS THEN
             RAISE NOTICE 'Ocurrió un error desconocido';
             RETURN FALSE;
