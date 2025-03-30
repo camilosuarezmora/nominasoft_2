@@ -55,7 +55,7 @@ $$
             RETURN FALSE;
         END IF;
 
-        IF wind_perio_pago <> 'Q' OR wind_perio_pago <> 'M' THEN
+        IF wind_perio_pago NOT IN ('Q','M')  THEN
             RAISE NOTICE 'valor incorrecto, se debe escribir Q si va a pagar quincenal o M para mensual';
             RETURN FALSE;
         END IF;
