@@ -16,9 +16,10 @@ wneto_pagado tab_conceptos.neto_pagado%TYPE,
 wval_porcent tab_conceptos.val_porcent%TYPE,
 wval_fijo tab_conceptos.val_fijo%TYPE,
 wind_legal tab_conceptos.ind_legal%TYPE
-) RETURNS VOID AS
+) RETURNS BOOLEAN AS
 $$
     BEGIN
+    --logica
         INSERT INTO tab_conceptos (
 			id_concepto,
 			nom_concepto,
@@ -39,6 +40,49 @@ $$
             wval_fijo,
             wind_legal                 
         );
+
+    --validaciones
+        IF FOUND THEN
+            RAISE NOTICE 'Se agregó re bien parcerito tqm';
+            RETURN TRUE;
+        ELSE 
+            RAISE NOTICE 'no se agregó nada gei';
+            RETURN FALSE;
+		END IF;
+
+        IF LENGTH(wnom_concepto) < 5 THEN
+            RAISE NOTICE 'ese nombre está muy cortico qcho';
+            RETURN FALSE;
+        END IF;
+
+        IF wind_perio_pago <> 'Q' OR wind_perio_pago <> 'M' THEN
+            RAISE NOTICE 'valor incorrecto, se debe escribir Q si va a pagar quincenal o M para mensual';
+            RETURN FALSE;
+        END IF;
+
+        IF LENGTH(wval_porcent) < 0 AND LENGTH(wval_porcent) >= 3  THEN
+            RAISE NOTICE 'el valor del porcentaje está fuera del alcance';
+            RETURN FALSE; 
+        END IF;
+
+        IF LENGTH(wval_fijo) < 0 AND LENGTH(wval_fijo) >= 8 THEN
+            RAISE NOTICE 'el valor fijo ingresado está fuera del alcance';
+            RETURN FALSE; 
+        END IF;
+
+    --excepciones 
+        EXCEPTION   
+            WHEN SQLSTATE '23505' THEN
+                RAISE NOTICE 'Está mandando un NULO en el ID... Sea serio';
+			    RETURN FALSE;
+
+            WHEN SQLSTATE '23514' THEN
+                RAISE NOTICE 'El valor ingresado no cumple el check solicitado';
+                RETURN FALSE;
+            
+            WHEN others THEN
+                RAISE NOTICE 'Error desconocido al insertar el dato';
+                RETURN FALSE;
     END;
 $$
 
