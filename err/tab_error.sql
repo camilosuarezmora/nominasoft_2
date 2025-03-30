@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS tab_error(
     cod_error       VARCHAR     NOT NULL,
     name_error      VARCHAR     NOT NULL,
     PRIMARY KEY (cod_error)
-);
+);	
 
 
 -- Clase 00 – Successfucod_l Completion
