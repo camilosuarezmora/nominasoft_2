@@ -21,8 +21,9 @@ $$
 			RAISE NOTICE 'Se actualizó exitosamente';
 			RETURN TRUE;
 		ELSE 
-			RAISE NOTICE 'No se pido actualizar'
+			RAISE NOTICE 'No se pido actualizar';
 			RETURN FALSE;
+		END IF;
 
 	--EXCEPCIONES
 		EXCEPTION
