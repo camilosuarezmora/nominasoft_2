@@ -40,7 +40,11 @@ $$
     DECLARE wsum_deducido   tab_nomina.val_nomina%TYPE; --variable para almacenar el valor total de todos los deducidos
     DECLARE wval_netopagado tab_nomina.val_nomina%TYPE; -- ?? supongo que es para almacenar el valor que le corresponde a cada empleado 
     DECLARE wval_dias       tab_pmtros.num_diasmes%TYPE; --variable que almacena la cantidad de días del periodo,  15 si es Q - 30 si es M
-    
+    DECLARE wval_salario    tab_nomina.val_nomina%TYPE; 
+    DECLARE wval_trans      tab_nomina.val_nomina%TYPE;
+    DECLARE wval_concepto   tab_nomina.val_nomina%TYPE;
+
+
     BEGIN
 -- TRAEMOS LA DATA DE LA TABLA DE PARÁMETROS PORQUE ES NECESARIO Y OBLIGATORIO
         SELECT a.id_empresa,a.nom_empresa,a.ind_perio_pago,a.val_smlv,a.val_auxtrans,a.ind_num_trans,a.ano_nomina,
@@ -71,6 +75,15 @@ $$
                         FROM tab_conceptos a 
                         WHERE a.neto_pagado = FALSE AND a.ind_legal = TRUE';
         
+-- BORRAMOS LA NÓMINA DEL PERÍODO QUE SE VA A EJECUTAR para que se reinvente cada vez;
+        DELETE FROM tab_nomina
+        WHERE ano_nomina = wano_nomina AND
+              mes_nomina = wmes_nomina AND
+              per_nomina = wper_nomina;
+        IF NOT FOUND THEN
+	        RAISE Notice 'No hay registros... Seguimos en la fiesta';
+        END IF;  
+
         --se abre el primer cursor para iterar sobre los empleados
         OPEN wcur_emplea FOR EXECUTE wquery_empl;
 			FETCH wcur_emplea INTO wreg_emplea;
@@ -87,20 +100,77 @@ $$
                     FETCH wcur_concep INTO wreg_concep;
                     WHILE FOUND LOOP
                        --RAISE NOTICE '% % % % %',wreg_concep.id_concepto,wreg_concep.nom_concepto,wreg_concep.ind_operacion,wreg_concep.val_porcent,wreg_concep.val_fijo;
+
+                    --validar la cantidad de días a pagar según el periodo    
+                       IF wreg_pmtros.ind_perio_pago = 'Q' THEN
+                            wval_salario = wreg_emplea.val_sal_basico / 2;
+                        ELSE
+                            wval_salario = wreg_emplea.val_sal_basico;
+                        END IF;
+
                         IF wreg_concep.ind_operacion = TRUE THEN
                             IF wreg_concep.id_concepto = wreg_pmtros.id_concep_sb THEN
-                                wsum_devengado = wsum_devengado + ((wreg_emplea.val_sal_basico / wreg_pmtros.num_diasmes) * wval_dias);
+                                wsum_devengado = wsum_devengado + ((wval_salario / wreg_pmtros.num_diasmes) * wval_dias);
+
                                 RAISE NOTICE 'Dias a pagar es % y el devengado va en:%',wval_dias,wsum_devengado;
+
+                                INSERT INTO tab_nomina VALUES(wano_nomina,wmes_nomina,wper_nomina,wreg_emplea.id_emplea,wreg_concep.id_concepto,wval_dias,wval_salario);
+
+                                IF NOT FOUND THEN
+			                  		RAISE EXCEPTION USING ERRCODE = 'P0001';
+		                        END IF;
                             END IF;
                             IF wreg_concep.id_concepto = wreg_pmtros.id_concep_at THEN
+
+                            /*************************************************************************/
                                 IF wreg_emplea.val_sal_basico <= (wreg_pmtros.val_smlv * wreg_pmtros.ind_num_trans) THEN
-                                    wsum_devengado = wsum_devengado + wreg_pmtros.val_auxtrans;
-                                    --RAISE NOTICE 'Empleado: % Dias a pagar es %, Aux. Transp es % y el devengado va en:%',wreg_emplea.id_emplea,wval_dias,wreg_pmtros.val_auxtrans,wsum_devengado;
+                                    IF wreg_pmtros.ind_perio_pago = 'Q' THEN
+                                        wval_trans = wreg_pmtros.val_auxtrans / 2;
+                                    ELSE
+                                        wval_trans = wreg_pmtros.val_auxtrans;
+                                    END IF;
+
+                                    --wsum_devengado = wsum_devengado + wreg_pmtros.val_auxtrans;
+
+                                    RAISE NOTICE 'Empleado: % Dias a pagar es %, Aux. Transp es % y el devengado va en:%',wreg_emplea.id_emplea,wval_dias,wval_trans,wsum_devengado;
+
+                                    INSERT INTO tab_nomina VALUES(wano_nomina,wmes_nomina,wper_nomina,wreg_emplea.id_emplea,wreg_concep.id_concepto,wval_dias,wval_trans);
+
+                                    IF NOT FOUND THEN
+			                  		    RAISE EXCEPTION USING ERRCODE = 'P0001';
+		                            END IF; 
                                 END IF;
                             END IF;
-
+-- ACÁ VA EL RESTO DE CONCEPTOS QUE SUMAN Y NO SON OBLIGATORIOS (VIENEN DE NOVEDADES)...
                         ELSE
--- VOY ACÁ
+-- ACÁ VAN LOS CONCEPTOS QUE RESTAN A LA NÓMINA (DEDUCIDOS)
+                    
+                        IF wreg_concep.val_porcent <> 0 THEN
+                                wval_concepto = (wreg_emplea.val_sal_basico * wreg_concep.val_porcent) / 100;
+                                IF wreg_pmtros.ind_perio_pago = 'Q' THEN
+                                    wval_concepto = wval_concepto / 2;
+                                END IF;
+                                INSERT INTO tab_nomina VALUES(wano_nomina,wmes_nomina,wper_nomina,wreg_emplea.id_emplea,
+                                                              wreg_concep.id_concepto,wval_dias,wval_concepto);
+                                IF NOT FOUND THEN
+		                  		    RAISE EXCEPTION USING ERRCODE = 'P0001';
+	                            END IF;
+                                wsum_deducido = wsum_deducido + wval_concepto;
+                            END IF;
+
+                            IF wreg_concep.val_fijo <> 0 THEN
+                                wval_concepto = (wreg_emplea.val_sal_basico + wreg_concep.val_fijo);
+                                IF wreg_pmtros.ind_perio_pago = 'Q' THEN
+                                    wval_concepto = wval_concepto / 2;
+                                END IF;
+                                INSERT INTO tab_nomina VALUES(wano_nomina,wmes_nomina,wper_nomina,wreg_emplea.id_emplea,
+                                                              wreg_concep.id_concepto,wval_dias,wval_concepto);
+                                IF NOT FOUND THEN
+		                  		    RAISE EXCEPTION USING ERRCODE = 'P0001';
+	                            END IF;
+                                wsum_deducido = wsum_deducido + wval_concepto;
+                            END IF;
+                            
                         END IF;
                         FETCH wcur_concep INTO wreg_concep;
                     END LOOP;
