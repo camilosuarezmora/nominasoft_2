@@ -1,3 +1,5 @@
+--select * from tab_novedades;
+
 /*
 **********************************
     Script Creacion Del Modelo
@@ -139,8 +141,8 @@ CREATE TABLE IF NOT EXISTS tab_pmtros
     val_smlv        DECIMAL(8,0)    NOT NULL                    CHECK(val_smlv > 0), -- Valor del salario mínimo legal vigente para el año según gobierno
     val_auxtrans    DECIMAL (7,0)   NOT NULL                    CHECK(val_auxtrans > 0 AND val_auxtrans < val_smlv), -- Vr. Aux. Transporte vigente para el año según gobierno
     ind_num_trans   DECIMAL(1)      NOT NULL    DEFAULT 2       CHECK(ind_num_trans > 0 AND ind_num_trans < 4), --NÚM. PARA MULTIPLICAR EL SALARAIO, PARA SABER SI PAGAMOS AUXILIO DE TRANSPORTE O NO 
-    ano_nom         DECIMAL(4,0)    NOT NULL    DEFAULT 2025, --AÑO VIGENTE
-    mes_nom         DECIMAL(2)      NOT NULL                    CHECK(mes_nom >= 1 AND mes_nom <= 12), --MES VIGENTE
+    ano_nomina      DECIMAL(4,0)    NOT NULL    DEFAULT 2025, --AÑO VIGENTE
+    mes_nomina      DECIMAL(2)      NOT NULL                    CHECK(mes_nomina >= 1 AND mes_nomina <= 12), --MES VIGENTE
     val_por_intces  DECIMAL(2,0)    NOT NULL    DEFAULT 12, -- Vr. porcentaje de intereses a la cesantía
     num_diasmes     DECIMAL(2,0)    NOT NULL    DEFAULT 30, -- Número de días del mes fiscal
     id_concep_sb    DECIMAL(2,0)    NOT NULL, -- FK para identificar si el concepto es el de salario básico
@@ -149,7 +151,7 @@ CREATE TABLE IF NOT EXISTS tab_pmtros
 
 
     PRIMARY KEY(id_empresa),
-    FOREIGN KEY(mes_nom)    REFERENCES tab_meses(id_mes)    ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(mes_nomina)    REFERENCES tab_meses(id_mes)    ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (id_concep_sb) REFERENCES tab_conceptos(id_concepto) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (id_concep_at) REFERENCES tab_conceptos(id_concepto) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -266,7 +268,7 @@ INSERT INTO tab_novedades VALUES(2025,  1,  1,  1015000004,   10, 15, 10);
 
 
 
-select * from tab_nomina;
+-- select * from tab_nomina;
 /*resultado de la nomina, recopilación del resto de información en un solo documento de nomina*/
 CREATE TABLE IF NOT EXISTS tab_nomina
 (
