@@ -35,6 +35,9 @@ $$
     SELECT a.id_concepto,a.nom_concepto,a.ind_operacion,a.val_porcent,a.val_fijo FROM tab_conceptos a WHERE a.neto_pagado = FALSE AND a.ind_legal = TRUE*/
     DECLARE wquery_conc     VARCHAR;
 
+    /*variable para almacenar el query que trae los cooncceptos devengados y no obligatorios*/
+    DECLARE wquery_noveda   VARCHAR;
+
     --se declaran otras variables que vamos a utilizar en la lógica
     DECLARE wsum_devengado  tab_nomina.val_nomina%TYPE; --variable para almacenar el valor total de todos los devengados
     DECLARE wsum_deducido   tab_nomina.val_nomina%TYPE; --variable para almacenar el valor total de todos los deducidos
@@ -50,6 +53,8 @@ $$
         SELECT a.id_empresa,a.nom_empresa,a.ind_perio_pago,a.val_smlv,a.val_auxtrans,a.ind_num_trans,a.ano_nomina,
                a.mes_nomina,a.num_diasmes,a.id_concep_sb,a.id_concep_at INTO wreg_pmtros FROM tab_pmtros a;
 --        RAISE NOTICE '% % % % % % % % % % %',wreg_pmtros.id_empresa,wreg_pmtros.nom_empresa,wreg_pmtros.ind_perio_pago,wreg_pmtros.val_smlv,wreg_pmtros.val_auxtrans,wreg_pmtros.ind_num_trans,wreg_pmtros.ano_nomina,wreg_pmtros.mes_nomina,wreg_pmtros.num_diasmes,wreg_pmtros.id_concep_sb,wreg_pmtros.id_concep_at;
+	
+
 
 -- VALIDAMOS LAS ENTRADAS PARA QUE N HAYAN GOLES DESPUÉS
 		IF wano_nomina <> wreg_pmtros.ano_nomina THEN
@@ -74,10 +79,14 @@ $$
 -- EMPIEZA EL BAILE ACÁ
         --declara las querys necesarias
         wquery_empl =   'SELECT a.id_emplea,a.nom_emplea,a.ape_emplea,a.val_sal_basico FROM tab_emplea a';
-        --esta query trae info de los coneptos obligatorios
+        --esta query trae info de los conceptos obligatorios
         wquery_conc =   'SELECT a.id_concepto,a.nom_concepto,a.ind_operacion,a.val_porcent,a.val_fijo 
                         FROM tab_conceptos a 
                         WHERE a.neto_pagado = FALSE AND a.ind_legal = TRUE';
+        --esta query trae info de los conceptos no obligatorios (novedades)
+        wquery_noveda = 'SELECT a.id_concepto,a.nom_concepto,a.ind_operacion,a.val_porcent,a.val_fijo 
+                        FROM tab_conceptos a 
+                        WHERE a.neto_pagado = FALSE AND a.ind_legal = FALSE';    
         
 -- BORRAMOS LA NÓMINA DEL PERÍODO QUE SE VA A EJECUTAR para que se reinvente cada vez;
         DELETE FROM tab_nomina
@@ -174,7 +183,31 @@ $$
 		                            END IF; 
                                 END IF;
                             END IF;
+
+/*
 -- ACÁ VA EL RESTO DE CONCEPTOS QUE SUMAN Y NO SON OBLIGATORIOS (VIENEN DE NOVEDADES tab_novedades.id_concepto)...
+                    --traemos los datos de nomina pq si
+                        SELECT         
+                            a.ano_nomina, 
+                            a.mes_nomina,
+                            a.per_nomina,
+                            a.id_emplea,
+                            a.id_concepto,
+                            a.val_dias_trab,
+                            a.val_horas_trab
+                        INTO wreg_noveda FROM tab_novedades a
+                        WHERE a.ano_nomina = wano_nomina AND
+                              a.mes_nomina = wmes_nomina AND
+                              a.per_nomina = wper_nomina AND
+                              a.id_emplea = wreg_emplea.id_emplea AND
+                              a.id_concepto = wreg_concep.id_concepto;
+                        
+                        --MUESTRA LO QUE TRAJO
+                        RAISE NOTICE 'Novedad: % % % % % % % %',wreg_noveda.ano_nomina,wreg_noveda.mes_nomina,wreg_noveda.per_nomina,wreg_noveda.id_emplea,wreg_noveda.id_concepto,wreg_noveda.val_dias_trab,wreg_noveda.val_horas_trab;
+ 
+                        OPEN wcur_noveda FOR EXECUTE wquery_noveda;
+			            FETCH wcur_emplea INTO wreg_noveda;
+                        --  WHILE FOUND LOOP
     /*
         INSERT INTO tab_conceptos VALUES(6, 'Bonificación por chismoso',         TRUE,   'M',    FALSE,  0,      100000, FALSE);
         INSERT INTO tab_conceptos VALUES(7, 'Horas Extras Diurnas',              TRUE,   'Q',    FALSE,  25,     0,      FALSE);
@@ -182,6 +215,8 @@ $$
         INSERT INTO tab_conceptos VALUES(9, 'Horas Extras Festivas Diurnas',     TRUE,   'Q',    FALSE,  100,    0,      FALSE);
         INSERT INTO tab_conceptos VALUES(10,'Horas Extras Fetivas Nocturnas',    TRUE,   'Q',    FALSE,  150,    0,      FALSE);
     */
+	
+*/	
                         ELSE
 -- ACÁ VAN LOS CONCEPTOS QUE RESTAN A LA NÓMINA (DEDUCIDOS)
                         IF wreg_concep.val_porcent <> 0 THEN
