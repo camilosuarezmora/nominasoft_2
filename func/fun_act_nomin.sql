@@ -6,7 +6,7 @@
 */
 
 
-
+--SELECT * FROM tab_nomina;
 --SELECT fun_act_nomina(2025,1,1);
 /*se inicia la función pidiendo el año, el mes y el periodo (M o Q) especifico del que se va a calcular la nomina*/
 CREATE OR REPLACE FUNCTION fun_act_nomina(wano_nomina tab_nomina.ano_nomina%TYPE,wmes_nomina tab_nomina.mes_nomina%TYPE,
@@ -24,8 +24,7 @@ $$
     DECLARE wreg_concep     RECORD;
     
     --cursor y record para la información de las novedades, que se iteraran después de calcular la nomina modelo
-    DECLARE wcur_noveda     REFCURSOR;
-    DECLARE wreg_noveda     RECORD;
+    DECLARE wreg_concep2     RECORD;
 
     /*variable para almacenar la consulta que trae la información necesaria del empleado y no quemar código:
     SELECT a.id_emplea,a.nom_emplea,a.ape_emplea,a.val_sal_basico FROM tab_emplea a*/
@@ -183,40 +182,6 @@ $$
 		                            END IF; 
                                 END IF;
                             END IF;
-
-/*
--- ACÁ VA EL RESTO DE CONCEPTOS QUE SUMAN Y NO SON OBLIGATORIOS (VIENEN DE NOVEDADES tab_novedades.id_concepto)...
-                    --traemos los datos de nomina pq si
-                        SELECT         
-                            a.ano_nomina, 
-                            a.mes_nomina,
-                            a.per_nomina,
-                            a.id_emplea,
-                            a.id_concepto,
-                            a.val_dias_trab,
-                            a.val_horas_trab
-                        INTO wreg_noveda FROM tab_novedades a
-                        WHERE a.ano_nomina = wano_nomina AND
-                              a.mes_nomina = wmes_nomina AND
-                              a.per_nomina = wper_nomina AND
-                              a.id_emplea = wreg_emplea.id_emplea AND
-                              a.id_concepto = wreg_concep.id_concepto;
-                        
-                        --MUESTRA LO QUE TRAJO
-                        RAISE NOTICE 'Novedad: % % % % % % % %',wreg_noveda.ano_nomina,wreg_noveda.mes_nomina,wreg_noveda.per_nomina,wreg_noveda.id_emplea,wreg_noveda.id_concepto,wreg_noveda.val_dias_trab,wreg_noveda.val_horas_trab;
- 
-                        OPEN wcur_noveda FOR EXECUTE wquery_noveda;
-			            FETCH wcur_emplea INTO wreg_noveda;
-                        --  WHILE FOUND LOOP
-    /*
-        INSERT INTO tab_conceptos VALUES(6, 'Bonificación por chismoso',         TRUE,   'M',    FALSE,  0,      100000, FALSE);
-        INSERT INTO tab_conceptos VALUES(7, 'Horas Extras Diurnas',              TRUE,   'Q',    FALSE,  25,     0,      FALSE);
-        INSERT INTO tab_conceptos VALUES(8, 'Horas Extras Nocturna',             TRUE,   'Q',    FALSE,  75,     0,      FALSE);
-        INSERT INTO tab_conceptos VALUES(9, 'Horas Extras Festivas Diurnas',     TRUE,   'Q',    FALSE,  100,    0,      FALSE);
-        INSERT INTO tab_conceptos VALUES(10,'Horas Extras Fetivas Nocturnas',    TRUE,   'Q',    FALSE,  150,    0,      FALSE);
-    */
-	
-*/	
                         ELSE
 -- ACÁ VAN LOS CONCEPTOS QUE RESTAN A LA NÓMINA (DEDUCIDOS)
                         IF wreg_concep.val_porcent <> 0 THEN
@@ -247,10 +212,50 @@ $$
 
                         END IF;
                         FETCH wcur_concep INTO wreg_concep;
+
                     END LOOP;
                 CLOSE wcur_concep;
 -- HASTA ACÁ EMPEZAMOS VA EL RECORRIDO DE CONCEPTOS...
-			    FETCH wcur_emplea INTO wreg_emplea;
+				
+    /*
+        INSERT INTO tab_conceptos VALUES(6, 'Bonificación por chismoso',         TRUE,   'M',    FALSE,  0,      100000, FALSE);
+        INSERT INTO tab_conceptos VALUES(7, 'Horas Extras Diurnas',              TRUE,   'Q',    FALSE,  25,     0,      FALSE);
+        INSERT INTO tab_conceptos VALUES(8, 'Horas Extras Nocturna',             TRUE,   'Q',    FALSE,  75,     0,      FALSE);
+        INSERT INTO tab_conceptos VALUES(9, 'Horas Extras Festivas Diurnas',     TRUE,   'Q',    FALSE,  100,    0,      FALSE);
+        INSERT INTO tab_conceptos VALUES(10,'Horas Extras Fetivas Nocturnas',    TRUE,   'Q',    FALSE,  150,    0,      FALSE);
+    */
+	
+			
+
+                --llenar el record wreg_concep2 de la tabla conceptos
+                /*
+                pero con la información de conceptos no obligatorios
+                        SELECT         
+                            a.ano_nomina, 
+                            a.mes_nomina,
+                            a.per_nomina,
+                            a.id_emplea,
+                            a.id_concepto,
+                            a.val_dias_trab,
+                            a.val_horas_trab
+                        INTO wreg_noveda FROM tab_novedades a
+                        WHERE a.ano_nomina = wano_nomina AND
+                              a.mes_nomina = wmes_nomina AND
+                              a.per_nomina = wper_nomina AND
+                              a.id_emplea = wreg_emplea.id_emplea AND
+                              a.id_concepto = wreg_concep.id_concepto;
+                        
+                        --MUESTRA LO QUE TRAJO
+                        RAISE NOTICE 'Novedad: % % % % % % % %',wreg_noveda.ano_nomina,wreg_noveda.mes_nomina,wreg_noveda.per_nomina,wreg_noveda.id_emplea,wreg_noveda.id_concepto,wreg_noveda.val_dias_trab,wreg_noveda.val_horas_trab;
+                        */
+
+				OPEN wcur_concep FOR EXECUTE wquery_noveda
+			    FETCH wcur_concep INTO wreg_concep2;
+                WHILE FOUND LOOP
+                    
+                END LOOP;
+                FETCH wcur_concep INTO wreg_concep2;
+                FETCH wcur_emplea INTO wreg_emplea;
             END LOOP;
 		CLOSE wcur_emplea;
         RETURN TRUE;
