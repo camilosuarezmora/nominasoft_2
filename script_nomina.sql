@@ -37,15 +37,15 @@ CREATE TABLE IF NOT EXISTS tab_conceptos
 /*
 INSERT INTO tab_conceptos VALUES(1, 'Salario Básico',                    TRUE,   'Q',    FALSE,  0,      0,      TRUE);
 INSERT INTO tab_conceptos VALUES(2, 'Auxilio de Transporte',             TRUE,   'Q',    FALSE,  0,      0,      TRUE);
-INSERT INTO tab_conceptos VALUES(3, 'Entidad Prestadora de Salud (EPS)', FALSE,  'M',    FALSE,  12,     0,      TRUE);
-INSERT INTO tab_conceptos VALUES(4, 'Administradora de Pensión (AFP)',   FALSE,  'M',    FALSE,  16,     0,      TRUE);
+INSERT INTO tab_conceptos VALUES(3, 'Entidad Prestadora de Salud (EPS)', FALSE,  'M',    FALSE,  4,      0,      TRUE);
+INSERT INTO tab_conceptos VALUES(4, 'Administradora de Pensión (AFP)',   FALSE,  'M',    FALSE,  4,      0,      TRUE);
 INSERT INTO tab_conceptos VALUES(5, 'NETO PAGADO',                       FALSE,  'Q',    TRUE,   0,      0,      TRUE);
 INSERT INTO tab_conceptos VALUES(6, 'Bonificación por chismoso',         TRUE,   'M',    FALSE,  0,      100000, FALSE);
 INSERT INTO tab_conceptos VALUES(7, 'Horas Extras Diurnas',              TRUE,   'Q',    FALSE,  25,     0,      FALSE);
 INSERT INTO tab_conceptos VALUES(8, 'Horas Extras Nocturna',             TRUE,   'Q',    FALSE,  75,     0,      FALSE);
 INSERT INTO tab_conceptos VALUES(9, 'Horas Extras Festivas Diurnas',     TRUE,   'Q',    FALSE,  100,    0,      FALSE);
-INSERT INTO tab_conceptos VALUES(10,'Horas Extras Fetivas Nocturnas',   TRUE,   'Q',    FALSE,  150,    0,      FALSE);
-INSERT INTO tab_conceptos VALUES(11,'Descuento por Préstamo',           FALSE,  'M',    FALSE,  10,     0,      FALSE);
+INSERT INTO tab_conceptos VALUES(10,'Horas Extras Fetivas Nocturnas',    TRUE,   'Q',    FALSE,  150,    0,      FALSE);
+INSERT INTO tab_conceptos VALUES(11,'Descuento por Préstamo',            FALSE,  'M',    FALSE,  10,     0,      FALSE);
 
 */
 
@@ -225,17 +225,19 @@ CREATE INDEX idx_val_tipo_sangre ON tab_emplea(val_tipo_sangre);
 /*novedades en la nomina, cambios o ajustes que se le hacen a la nomina*/
 CREATE TABLE IF NOT EXISTS tab_novedades
 (
+--PKs
     ano_nomina		DECIMAL(4,0)    NOT NULL, --año actual
     mes_nomina		DECIMAL(2)      NOT NULL, --mes actual
-    per_nomina		DECIMAL(1)      NOT NULL, --???????????????????
-    id_emplea		DECIMAL(10)     NOT NULL, --FK para identificar un empleado 
+    per_nomina		DECIMAL(1)      NOT NULL, --QUINCENAL O MENSUIAL
+    id_emplea		DECIMAL(10)     NOT NULL, --FK para identificar un empleado
     id_concepto		DECIMAL(2)      NOT NULL, --FK para saber a que concepto viene relacionada la novedad
+    
     val_dias_trab  	DECIMAL(2)      NOT NULL 	CHECK(val_dias_trab >= 1 AND val_dias_trab <= 30), 
     val_horas_trab 	DECIMAL(2)   	NOT NULL 	CHECK(val_horas_trab >= 1 AND val_horas_trab <= 24),
     PRIMARY KEY(ano_nomina,mes_nomina,per_nomina,id_emplea,id_concepto),
     FOREIGN KEY(id_emplea)      REFERENCES tab_emplea(id_emplea)        ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(id_concepto)    REFERENCES tab_conceptos(id_concepto)   ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(mes_nomina)        REFERENCES tab_meses(id_mes)            ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY(mes_nomina)     REFERENCES tab_meses(id_mes)            ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 /*
