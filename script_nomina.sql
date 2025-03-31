@@ -35,16 +35,25 @@ CREATE TABLE IF NOT EXISTS tab_conceptos
 
 --DATOS PA LLENAR
 /*
+--devengados obligatorios
 INSERT INTO tab_conceptos VALUES(1, 'Salario Básico',                    TRUE,   'Q',    FALSE,  0,      0,      TRUE);
 INSERT INTO tab_conceptos VALUES(2, 'Auxilio de Transporte',             TRUE,   'Q',    FALSE,  0,      0,      TRUE);
+
+--deducciones obligatorias
 INSERT INTO tab_conceptos VALUES(3, 'Entidad Prestadora de Salud (EPS)', FALSE,  'M',    FALSE,  4,      0,      TRUE);
 INSERT INTO tab_conceptos VALUES(4, 'Administradora de Pensión (AFP)',   FALSE,  'M',    FALSE,  4,      0,      TRUE);
+
+--que putas es esto?
 INSERT INTO tab_conceptos VALUES(5, 'NETO PAGADO',                       FALSE,  'Q',    TRUE,   0,      0,      TRUE);
+
+--devengados no obligatorios
 INSERT INTO tab_conceptos VALUES(6, 'Bonificación por chismoso',         TRUE,   'M',    FALSE,  0,      100000, FALSE);
 INSERT INTO tab_conceptos VALUES(7, 'Horas Extras Diurnas',              TRUE,   'Q',    FALSE,  25,     0,      FALSE);
 INSERT INTO tab_conceptos VALUES(8, 'Horas Extras Nocturna',             TRUE,   'Q',    FALSE,  75,     0,      FALSE);
 INSERT INTO tab_conceptos VALUES(9, 'Horas Extras Festivas Diurnas',     TRUE,   'Q',    FALSE,  100,    0,      FALSE);
 INSERT INTO tab_conceptos VALUES(10,'Horas Extras Fetivas Nocturnas',    TRUE,   'Q',    FALSE,  150,    0,      FALSE);
+
+--que putas es  esto la secuela
 INSERT INTO tab_conceptos VALUES(11,'Descuento por Préstamo',            FALSE,  'M',    FALSE,  10,     0,      FALSE);
 
 */
@@ -231,7 +240,7 @@ CREATE TABLE IF NOT EXISTS tab_novedades
     per_nomina		DECIMAL(1)      NOT NULL, --QUINCENAL O MENSUIAL
     id_emplea		DECIMAL(10)     NOT NULL, --FK para identificar un empleado
     id_concepto		DECIMAL(2)      NOT NULL, --FK para saber a que concepto viene relacionada la novedad
-    
+
     val_dias_trab  	DECIMAL(2)      NOT NULL 	CHECK(val_dias_trab >= 1 AND val_dias_trab <= 30), 
     val_horas_trab 	DECIMAL(2)   	NOT NULL 	CHECK(val_horas_trab >= 1 AND val_horas_trab <= 24),
     PRIMARY KEY(ano_nomina,mes_nomina,per_nomina,id_emplea,id_concepto),
@@ -261,14 +270,14 @@ select * from tab_nomina;
 /*resultado de la nomina, recopilación del resto de información en un solo documento de nomina*/
 CREATE TABLE IF NOT EXISTS tab_nomina
 (
-    ano_nomina         DECIMAL(4,0)    NOT NULL, --numero del año actual
-    mes_nomina       DECIMAL(2)      NOT NULL, --mes en la que se está haciendo la nomina 
-    per_nom         DECIMAL(1)      NOT NULL, --periodo de la nomina
+    ano_nomina      DECIMAL(4,0)    NOT NULL, --numero del año actual
+    mes_nomina      DECIMAL(2)      NOT NULL, --mes en la que se está haciendo la nomina 
+    per_nomina      DECIMAL(1)      NOT NULL, --periodo de la nomina
     id_emplea       DECIMAL(10)     NOT NULL, --FK que referencia al empleado al que se le hace la nomina
     id_concepto     DECIMAL(2)      NOT NULL, --Fk que especifica los detalles legales y económicos 
     val_dias_trab   DECIMAL(2)      NOT NULL    CHECK(val_dias_trab BETWEEN 1 AND 30), --cantidad de días habiles trabajados
     val_nomina      DECIMAL(8)      NOT NULL    CHECK (val_nomina >= 0), --valor final y total de la nomina
-    PRIMARY KEY(ano_nomina,mes_nomina,per_nom,id_emplea,id_concepto),
+    PRIMARY KEY(ano_nomina,mes_nomina,per_nomina,id_emplea,id_concepto),
     FOREIGN KEY(id_emplea)      REFERENCES tab_emplea(id_emplea)        ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(id_concepto)    REFERENCES tab_conceptos(id_concepto)   ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(mes_nomina)        REFERENCES tab_meses(id_mes)        ON DELETE CASCADE ON UPDATE CASCADE
