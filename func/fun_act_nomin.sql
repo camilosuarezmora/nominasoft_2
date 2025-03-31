@@ -1,20 +1,45 @@
+/*
+========================================================
+    toda la lógica bonita del programa se encuentra en esta función,
+    es la uq ele va a decir al usuario la cantidad final de nomina y cuanto se le dió a cada empleado.
+========================================================
+*/
+
+
+
 --SELECT fun_act_nomina(2025,1,1);
+/*se inicia la función pidiendo el año, el mes y el periodo (M o Q) especifico del que se va a calcular la nomina*/
 CREATE OR REPLACE FUNCTION fun_act_nomina(wano_nomina tab_nomina.ano_nomina%TYPE,wmes_nomina tab_nomina.mes_nomina%TYPE,
                                           wper_nomina tab_nomina.per_nomina%TYPE) RETURNS BOOLEAN AS
 $$
+    --record para almacenar la información de los parámetros
     DECLARE wreg_pmtros     RECORD;
+
+    --cursor y record para manejar los datos del empleado y así poder iterar sobre cada uno
     DECLARE wcur_emplea     REFCURSOR;
     DECLARE wreg_emplea     RECORD;
+
+    --cursor y record para manejar los datos del concepto y así poder iterar en base a la info del empleado
     DECLARE wcur_concep     REFCURSOR;
     DECLARE wreg_concep     RECORD;
+    
+    --cursor y record para la información de las novedades, que se iteraran después de calcular la nomina modelo
     DECLARE wcur_noveda     REFCURSOR;
     DECLARE wreg_noveda     RECORD;
+
+    /*variable para almacenar la consulta que trae la información necesaria del empleado y no quemar código:
+    SELECT a.id_emplea,a.nom_emplea,a.ape_emplea,a.val_sal_basico FROM tab_emplea a*/
     DECLARE wquery_empl     VARCHAR;
+
+    /*variable para almacenar la consulta que trae la información necesaria del concepto  y no quemar código:
+    SELECT a.id_concepto,a.nom_concepto,a.ind_operacion,a.val_porcent,a.val_fijo FROM tab_conceptos a WHERE a.neto_pagado = FALSE AND a.ind_legal = TRUE*/
     DECLARE wquery_conc     VARCHAR;
-    DECLARE wsum_devengado  tab_nomina.val_nomina%TYPE;
-    DECLARE wsum_deducido   tab_nomina.val_nomina%TYPE;
-    DECLARE wval_netopagado tab_nomina.val_nomina%TYPE;
-    DECLARE wval_dias       tab_pmtros.num_diasmes%TYPE;
+
+    --se declaran otras variables que vamos a utilizar en la lógica
+    DECLARE wsum_devengado  tab_nomina.val_nomina%TYPE; --variable para almacenar el valor total de todos los devengados
+    DECLARE wsum_deducido   tab_nomina.val_nomina%TYPE; --variable para almacenar el valor total de todos los deducidos
+    DECLARE wval_netopagado tab_nomina.val_nomina%TYPE; -- ?? supongo que es para almacenar el valor que le corresponde a cada empleado 
+    DECLARE wval_dias       tab_pmtros.num_diasmes%TYPE; --variable que almacena la cantidad de días del periodo,  15 si es Q - 30 si es M
     
     BEGIN
 -- TRAEMOS LA DATA DE LA TABLA DE PARÁMETROS PORQUE ES NECESARIO Y OBLIGATORIO
@@ -40,21 +65,28 @@ $$
         END IF;
 
 -- EMPIEZA EL BAILE ACÁ
-        wquery_empl = 'SELECT a.id_emplea,a.nom_emplea,a.ape_emplea,a.val_sal_basico FROM tab_emplea a';
-        wquery_conc = 'SELECT a.id_concepto,a.nom_concepto,a.ind_operacion,a.val_porcent,a.val_fijo FROM tab_conceptos a WHERE a.neto_pagado = FALSE AND a.ind_legal = TRUE';
+        --declara las querys necesarias
+        wquery_empl =   'SELECT a.id_emplea,a.nom_emplea,a.ape_emplea,a.val_sal_basico FROM tab_emplea a';
+        wquery_conc =   'SELECT a.id_concepto,a.nom_concepto,a.ind_operacion,a.val_porcent,a.val_fijo 
+                        FROM tab_conceptos a 
+                        WHERE a.neto_pagado = FALSE AND a.ind_legal = TRUE';
+        
+        --se abre el primer cursor para iterar sobre los empleados
         OPEN wcur_emplea FOR EXECUTE wquery_empl;
 			FETCH wcur_emplea INTO wreg_emplea;
             WHILE FOUND LOOP
 --			    RAISE NOTICE '% % % %',wreg_emplea.id_emplea,wreg_emplea.nom_emplea,wreg_emplea.ape_emplea,wreg_emplea.val_sal_basico;
+
 -- ACÁ EMPEZAMOS A RECORRER LA TABLA DE CONCEPTOS PARA LIQUIDAR LA NÓMINA, UNO A UNO...
                 wsum_devengado  = 0;
                 wsum_deducido   = 0;
                 wval_netopagado = 0;
+                
+                --se abre el segundo cursor para iterar cada concepto por empleado
                 OPEN wcur_concep FOR EXECUTE wquery_conc;
                     FETCH wcur_concep INTO wreg_concep;
                     WHILE FOUND LOOP
---                        RAISE NOTICE '% % % % %',wreg_concep.id_concepto,wreg_concep.nom_concepto,wreg_concep.ind_operacion,
---                                          wreg_concep.val_porcent,wreg_concep.val_fijo;
+                       --RAISE NOTICE '% % % % %',wreg_concep.id_concepto,wreg_concep.nom_concepto,wreg_concep.ind_operacion,wreg_concep.val_porcent,wreg_concep.val_fijo;
                         IF wreg_concep.ind_operacion = TRUE THEN
                             IF wreg_concep.id_concepto = wreg_pmtros.id_concep_sb THEN
                                 wsum_devengado = wsum_devengado + ((wreg_emplea.val_sal_basico / wreg_pmtros.num_diasmes) * wval_dias);
@@ -63,8 +95,7 @@ $$
                             IF wreg_concep.id_concepto = wreg_pmtros.id_concep_at THEN
                                 IF wreg_emplea.val_sal_basico <= (wreg_pmtros.val_smlv * wreg_pmtros.ind_num_trans) THEN
                                     wsum_devengado = wsum_devengado + wreg_pmtros.val_auxtrans;
-                                    RAISE NOTICE 'Empleado: % Dias a pagar es %, Aux. Transp es % y el devengado va en:%',
-                                                  wreg_emplea.id_emplea,wval_dias,wreg_pmtros.val_auxtrans,wsum_devengado;
+                                    --RAISE NOTICE 'Empleado: % Dias a pagar es %, Aux. Transp es % y el devengado va en:%',wreg_emplea.id_emplea,wval_dias,wreg_pmtros.val_auxtrans,wsum_devengado;
                                 END IF;
                             END IF;
 
