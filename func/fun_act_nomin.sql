@@ -5,7 +5,7 @@
 ========================================================
 */
 
-
+-- select * from tab_pmtros
 --SELECT * FROM tab_nomina;
 --SELECT fun_act_nomina(2025,1,1);
 /*se inicia la función pidiendo el año, el mes y el periodo (M o Q) especifico del que se va a calcular la nomina*/
@@ -51,7 +51,7 @@ $$
 -- TRAEMOS LA DATA DE LA TABLA DE PARÁMETROS PORQUE ES NECESARIO Y OBLIGATORIO
         SELECT a.id_empresa,a.nom_empresa,a.ind_perio_pago,a.val_smlv,a.val_auxtrans,a.ind_num_trans,a.ano_nomina,
                a.mes_nomina,a.num_diasmes,a.id_concep_sb,a.id_concep_at INTO wreg_pmtros FROM tab_pmtros a;
---        RAISE NOTICE '% % % % % % % % % % %',wreg_pmtros.id_empresa,wreg_pmtros.nom_empresa,wreg_pmtros.ind_perio_pago,wreg_pmtros.val_smlv,wreg_pmtros.val_auxtrans,wreg_pmtros.ind_num_trans,wreg_pmtros.ano_nomina,wreg_pmtros.mes_nomina,wreg_pmtros.num_diasmes,wreg_pmtros.id_concep_sb,wreg_pmtros.id_concep_at;
+        RAISE NOTICE '% % % % % % % % % % %',wreg_pmtros.id_empresa,wreg_pmtros.nom_empresa,wreg_pmtros.ind_perio_pago,wreg_pmtros.val_smlv,wreg_pmtros.val_auxtrans,wreg_pmtros.ind_num_trans,wreg_pmtros.ano_nomina,wreg_pmtros.mes_nomina,wreg_pmtros.num_diasmes,wreg_pmtros.id_concep_sb,wreg_pmtros.id_concep_at;
 	
 
 
@@ -93,14 +93,14 @@ $$
               mes_nomina = wmes_nomina AND
               per_nomina = wper_nomina;
         IF NOT FOUND THEN
-	        RAISE NOTICE 'No hay registros... Seguimos en la fiesta';
+	        RAISE NOTICE 'No hay nada para borrar, seguimos de largo';
         END IF;  
 
         --se abre el primer cursor para iterar sobre los empleados
         OPEN wcur_emplea FOR EXECUTE wquery_empl;
 			FETCH wcur_emplea INTO wreg_emplea;
             WHILE FOUND LOOP
---			    RAISE NOTICE '% % % %',wreg_emplea.id_emplea,wreg_emplea.nom_emplea,wreg_emplea.ape_emplea,wreg_emplea.val_sal_basico;
+			    RAISE NOTICE '% % % %',wreg_emplea.id_emplea,wreg_emplea.nom_emplea,wreg_emplea.ape_emplea,wreg_emplea.val_sal_basico;
 
 -- ACÁ EMPEZAMOS A RECORRER LA TABLA DE CONCEPTOS PARA LIQUIDAR LA NÓMINA, UNO A UNO...
                 wsum_devengado  = 0;
@@ -111,7 +111,7 @@ $$
                 OPEN wcur_concep FOR EXECUTE wquery_conc;
                     FETCH wcur_concep INTO wreg_concep;
                     WHILE FOUND LOOP
-                       --RAISE NOTICE '% % % % %',wreg_concep.id_concepto,wreg_concep.nom_concepto,wreg_concep.ind_operacion,wreg_concep.val_porcent,wreg_concep.val_fijo;
+                       RAISE NOTICE '% % % % %',wreg_concep.id_concepto,wreg_concep.nom_concepto,wreg_concep.ind_operacion,wreg_concep.val_porcent,wreg_concep.val_fijo;
 
                     --validar la cantidad de días a pagar según el periodo    
                        IF wreg_pmtros.ind_perio_pago = 'Q' THEN
@@ -248,7 +248,7 @@ $$
                         --MUESTRA LO QUE TRAJO
                         RAISE NOTICE 'Novedad: % % % % % % % %',wreg_noveda.ano_nomina,wreg_noveda.mes_nomina,wreg_noveda.per_nomina,wreg_noveda.id_emplea,wreg_noveda.id_concepto,wreg_noveda.val_dias_trab,wreg_noveda.val_horas_trab;
                         */
-
+/*
 				OPEN wcur_concep FOR EXECUTE wquery_noveda
 			    FETCH wcur_concep INTO wreg_concep2;
                 WHILE FOUND LOOP
@@ -256,10 +256,10 @@ $$
                 END LOOP;
                 FETCH wcur_concep INTO wreg_concep2;
                 FETCH wcur_emplea INTO wreg_emplea;
+*/
             END LOOP;
 		CLOSE wcur_emplea;
         RETURN TRUE;
-
 -- VALIDACIÓN DE LAS EXCEPCIONES. VIENE DE LAS CONDICIONES DE ARRIBA
 		EXCEPTION
             WHEN SQLSTATE '22008' THEN
