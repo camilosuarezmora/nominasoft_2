@@ -19,7 +19,12 @@ DROP TABLE IF EXISTS tab_conceptos;
 
 
 
-
+/*  _        _                                      _             */
+/* | |_ __ _| |__     ___ ___  _ __   ___ ___ _ __ | |_ ___  ___  */
+/* | __/ _` | '_ \   / __/ _ \| '_ \ / __/ _ \ '_ \| __/ _ \/ __| */
+/* | || (_| | |_) | | (_| (_) | | | | (_|  __/ |_) | || (_) \__ \ */
+/*  \__\__,_|_.__/___\___\___/|_| |_|\___\___| .__/ \__\___/|___/ */
+/*              |_____|                      |_|                  */
 -- select * from tab_conceptos;
 /*tab_conceptos almacena los diferentes conceptos que se pueden aplicar a la nómina (devengados o deducidos y si informmación especifica)*/
 CREATE TABLE IF NOT EXISTS tab_conceptos
@@ -64,7 +69,12 @@ INSERT INTO tab_conceptos VALUES(11,'Descuento por Préstamo',            FALSE,
 
 
 
-
+/*  _        _                                      */
+/* | |_ __ _| |__     ___ __ _ _ __ __ _  ___  ___  */
+/* | __/ _` | '_ \   / __/ _` | '__/ _` |/ _ \/ __| */
+/* | || (_| | |_) | | (_| (_| | | | (_| | (_) \__ \ */
+/*  \__\__,_|_.__/___\___\__,_|_|  \__, |\___/|___/ */
+/*              |_____|            |___/            */
 -- select * from tab_cargos;
 /*tab_cargos almacena los diferentes roles de los trabajadores en la empresa*/
 CREATE TABLE IF NOT EXISTS tab_cargos
@@ -101,7 +111,12 @@ INSERT INTO tab_cargos VALUES(  20,     'Vigilante');
 
 
 
-
+/*  _        _                                       */
+/* | |_ __ _| |__     _ __ ___   ___  ___  ___  ___  */
+/* | __/ _` | '_ \   | '_ ` _ \ / _ \/ __|/ _ \/ __| */
+/* | || (_| | |_) |  | | | | | |  __/\__ \  __/\__ \ */
+/*  \__\__,_|_.__/___|_| |_| |_|\___||___/\___||___/ */
+/*              |_____|                              */
 -- select * from tab_meses;
 /*información sobre los meses (id y nombre)*/
 CREATE TABLE IF NOT EXISTS tab_meses
@@ -131,7 +146,12 @@ INSERT INTO tab_meses VALUES(   12,     'Diciembre');
 
 
 
-
+/*  _        _                         _                  */
+/* | |_ __ _| |__      _ __  _ __ ___ | |_ _ __ ___  ___  */
+/* | __/ _` | '_ \    | '_ \| '_ ` _ \| __| '__/ _ \/ __| */
+/* | || (_| | |_) |   | |_) | | | | | | |_| | | (_) \__ \ */
+/*  \__\__,_|_.__/____| .__/|_| |_| |_|\__|_|  \___/|___/ */
+/*              |_____|_|                                 */
 -- select * from tab_pmtros;
 CREATE TABLE IF NOT EXISTS tab_pmtros
 (
@@ -164,7 +184,12 @@ INSERT INTO tab_pmtros VALUES(123456,'EMPRESA LA COSITA RICA','Q',1423500,200000
 
 
 
-
+/*  _        _                            _             */
+/* | |_ __ _| |__     ___ _ __ ___  _ __ | | ___  __ _  */
+/* | __/ _` | '_ \   / _ \ '_ ` _ \| '_ \| |/ _ \/ _` | */
+/* | || (_| | |_) | |  __/ | | | | | |_) | |  __/ (_| | */
+/*  \__\__,_|_.__/___\___|_| |_| |_| .__/|_|\___|\__,_| */
+/*              |_____|            |_|                  */
 -- select * from tab_emplea;
 /* tab_emplea almacena toda la información de los empleados (trabajadores) */
 CREATE TABLE IF NOT EXISTS tab_emplea
@@ -213,10 +238,10 @@ INSERT INTO tab_emplea VALUES(1015000008,   'Yessenya Vanessa', 'Sanabria de Jan
 */
 
 /*Indices del emplea(do) xq sí*/
-CREATE INDEX idx_nom_emplea      ON tab_emplea(nom_emplea);
-CREATE INDEX idx_ape_emplea      ON tab_emplea(ape_emplea);
-CREATE INDEX idx_ind_estrato     ON tab_emplea(ind_estrato);
-CREATE INDEX idx_val_tipo_sangre ON tab_emplea(val_tipo_sangre);
+-- CREATE INDEX idx_nom_emplea      ON tab_emplea(nom_emplea);
+-- CREATE INDEX idx_ape_emplea      ON tab_emplea(ape_emplea);
+-- CREATE INDEX idx_ind_estrato     ON tab_emplea(ind_estrato);
+-- CREATE INDEX idx_val_tipo_sangre ON tab_emplea(val_tipo_sangre);
 
 
 
@@ -227,11 +252,12 @@ CREATE INDEX idx_val_tipo_sangre ON tab_emplea(val_tipo_sangre);
 
 
 
-
-
-
-
-
+/*  _        _                                 _           _            */
+/* | |_ __ _| |__     _ __   _____   _____  __| | __ _  __| | ___  ___  */
+/* | __/ _` | '_ \   | '_ \ / _ \ \ / / _ \/ _` |/ _` |/ _` |/ _ \/ __| */
+/* | || (_| | |_) |  | | | | (_) \ V /  __/ (_| | (_| | (_| |  __/\__ \ */
+/*  \__\__,_|_.__/___|_| |_|\___/ \_/ \___|\__,_|\__,_|\__,_|\___||___/ */
+/*              |_____|                                                 */
 -- select * from tab_novedades;
 /*novedades en la nomina, cambios o ajustes que se le hacen a la nomina*/
 CREATE TABLE IF NOT EXISTS tab_novedades
@@ -267,7 +293,12 @@ INSERT INTO tab_novedades VALUES(2025,  1,  1,  1015000004,   10, 15, 10);
 
 
 
-
+/*  _        _                              _              */
+/* | |_ __ _| |__     _ __   ___  _ __ ___ (_)_ __   __ _  */
+/* | __/ _` | '_ \   | '_ \ / _ \| '_ ` _ \| | '_ \ / _` | */
+/* | || (_| | |_) |  | | | | (_) | | | | | | | | | | (_| | */
+/*  \__\__,_|_.__/___|_| |_|\___/|_| |_| |_|_|_| |_|\__,_| */
+/*              |_____|                                    */
 -- select * from tab_nomina;
 /*resultado de la nomina, recopilación del resto de información en un solo documento de nomina*/
 CREATE TABLE IF NOT EXISTS tab_nomina
