@@ -34,7 +34,9 @@ $$
     SELECT a.id_concepto,a.nom_concepto,a.ind_operacion,a.val_porcent,a.val_fijo FROM tab_conceptos a WHERE a.neto_pagado = FALSE AND a.ind_legal = TRUE*/
     DECLARE wquery_conc     VARCHAR;
 
-    /*variable para almacenar el query que trae los cooncceptos devengados y no obligatorios*/
+    /*variable para almacenar el query que trae los cooncceptos devengados y no obligatorios: SELECT a.id_concepto,a.nom_concepto,a.ind_operacion,a.val_porcent,a.val_fijo 
+                        FROM tab_conceptos a 
+                        WHERE a.neto_pagado = FALSE AND a.ind_legal = FALSE*/
     DECLARE wquery_noveda   VARCHAR;
 
     --se declaran otras variables que vamos a utilizar en la lógica
@@ -106,7 +108,8 @@ $$
                 wsum_devengado  = 0;
                 wsum_deducido   = 0;
                 wval_netopagado = 0;
-                
+
+--Los CONCEPTOS OBLIGATORIOS (DEVENGADOS Y DEDUCIDOS) EMPIEZAN aquí                
                 --se abre el segundo cursor para iterar cada concepto por empleado
                 OPEN wcur_concep FOR EXECUTE wquery_conc;
                     FETCH wcur_concep INTO wreg_concep;
@@ -215,48 +218,45 @@ $$
 
                     END LOOP;
                 CLOSE wcur_concep;
--- HASTA ACÁ EMPEZAMOS VA EL RECORRIDO DE CONCEPTOS...
-				
-    /*
-        INSERT INTO tab_conceptos VALUES(6, 'Bonificación por chismoso',         TRUE,   'M',    FALSE,  0,      100000, FALSE);
-        INSERT INTO tab_conceptos VALUES(7, 'Horas Extras Diurnas',              TRUE,   'Q',    FALSE,  25,     0,      FALSE);
-        INSERT INTO tab_conceptos VALUES(8, 'Horas Extras Nocturna',             TRUE,   'Q',    FALSE,  75,     0,      FALSE);
-        INSERT INTO tab_conceptos VALUES(9, 'Horas Extras Festivas Diurnas',     TRUE,   'Q',    FALSE,  100,    0,      FALSE);
-        INSERT INTO tab_conceptos VALUES(10,'Horas Extras Fetivas Nocturnas',    TRUE,   'Q',    FALSE,  150,    0,      FALSE);
-    */
-	
-			
 
-                --llenar el record wreg_concep2 de la tabla conceptos
-                /*
-                pero con la información de conceptos no obligatorios
-                        SELECT         
-                            a.ano_nomina, 
-                            a.mes_nomina,
-                            a.per_nomina,
-                            a.id_emplea,
-                            a.id_concepto,
-                            a.val_dias_trab,
-                            a.val_horas_trab
-                        INTO wreg_noveda FROM tab_novedades a
-                        WHERE a.ano_nomina = wano_nomina AND
-                              a.mes_nomina = wmes_nomina AND
-                              a.per_nomina = wper_nomina AND
-                              a.id_emplea = wreg_emplea.id_emplea AND
-                              a.id_concepto = wreg_concep.id_concepto;
-                        
-                        --MUESTRA LO QUE TRAJO
-                        RAISE NOTICE 'Novedad: % % % % % % % %',wreg_noveda.ano_nomina,wreg_noveda.mes_nomina,wreg_noveda.per_nomina,wreg_noveda.id_emplea,wreg_noveda.id_concepto,wreg_noveda.val_dias_trab,wreg_noveda.val_horas_trab;
-                        */
-/*
+--Los CONCEPTOS OBLIGATORIOS (DEVENGADOS Y DEDUCIDOS) van hasta aquí
+
+/*hay que:
+    *llenar el record2 con la primera iteración de tab_conceptos 
+
+            SELECT 
+                a.id_concepto,
+                a.nom_concepto,
+                a.ind_operacion,
+                a.val_porcent,
+                a.val_fijo 
+            INTO wreg_concep2
+            FROM tab_conceptos a 
+            WHERE a.neto_pagado = FALSE AND a.ind_legal = FALSE
+
+            RAISE NOTICE 'concepto:% % % % %',
+                wreg_concep2.id_concepto,
+                wreg_concep2.nom_concepto,
+                wreg_concep2.ind_operacion,
+                wreg_concep2.val_porcent,
+                wreg_concep2.val_fijo;
+
+
+    *abrir el cur_concep de nuevo
 				OPEN wcur_concep FOR EXECUTE wquery_noveda
 			    FETCH wcur_concep INTO wreg_concep2;
                 WHILE FOUND LOOP
-                    
+                    --lógica de cada concepto no obligatorio:
+                                -- INSERT INTO tab_conceptos VALUES(6, 'Bonificación por chismoso',         TRUE,   'M',    FALSE,  0,      100000, FALSE);
+                                -- INSERT INTO tab_conceptos VALUES(7, 'Horas Extras Diurnas',              TRUE,   'Q',    FALSE,  25,     0,      FALSE);
+                                -- INSERT INTO tab_conceptos VALUES(8, 'Horas Extras Nocturna',             TRUE,   'Q',    FALSE,  75,     0,      FALSE);
+                                -- INSERT INTO tab_conceptos VALUES(9, 'Horas Extras Festivas Diurnas',     TRUE,   'Q',    FALSE,  100,    0,      FALSE);
+                                -- INSERT INTO tab_conceptos VALUES(10,'Horas Extras Fetivas Nocturnas',    TRUE,   'Q',    FALSE,  150,    0,      FALSE);
                 END LOOP;
                 FETCH wcur_concep INTO wreg_concep2;
                 FETCH wcur_emplea INTO wreg_emplea;
 */
+
             END LOOP;
 		CLOSE wcur_emplea;
         RETURN TRUE;
