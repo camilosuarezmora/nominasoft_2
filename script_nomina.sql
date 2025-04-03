@@ -11,6 +11,8 @@
 -- SECCIÓN DE BORRADO DE TABLAS, PARA INICIAR EL PROCESO
 DROP TABLE IF EXISTS tab_novedades;
 DROP TABLE IF EXISTS tab_nomina;
+
+--datos generales
 DROP TABLE IF EXISTS tab_emplea;
 DROP TABLE IF EXISTS tab_cargos;
 DROP TABLE IF EXISTS tab_pmtros;
