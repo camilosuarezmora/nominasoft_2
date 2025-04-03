@@ -19,7 +19,20 @@ DROP TABLE IF EXISTS tab_pmtros;
 DROP TABLE IF EXISTS tab_meses;
 DROP TABLE IF EXISTS tab_conceptos;
 
+--tabla para gestionar login
+DROP TABLE IF EXISTS users;
 
+
+
+CREATE TABLE IF NOT EXISTS users
+(
+    uid                 SERIAL          NOT NULL,
+    username            VARCHAR         NOT NULL,
+    password            VARCHAR         NOT NULL,
+    email               VARCHAR         NOT NULL,
+    name                VARCHAR         NOT NULL,
+    PRIMARY KEY(uid)
+);
 
 /*  _        _                                      _             */
 /* | |_ __ _| |__     ___ ___  _ __   ___ ___ _ __ | |_ ___  ___  */
